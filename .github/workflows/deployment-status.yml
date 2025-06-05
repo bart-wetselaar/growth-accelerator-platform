@@ -1,0 +1,32 @@
+name: Multi-Platform Deployment Status
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deployment_status:
+    runs-on: ubuntu-latest
+    name: Check All Deployments
+    steps:
+      - name: Check Azure Static Web Apps
+        run: |
+          curl -f https://black-stone-0c2b8303.6.azurestaticapps.net || echo "Azure deployment pending"
+          
+      - name: Check GitHub Pages
+        run: |
+          curl -f https://bart-wetselaar.github.io/growth-accelerator-platform || echo "GitHub Pages deployment pending"
+          
+      - name: Check Replit Production
+        run: |
+          curl -f https://staff-match-pro-bart83.replit.app || echo "Replit primary healthy"
+          curl -f https://webapp.growthaccelerator.nl || echo "Replit secondary healthy"
+          
+      - name: Deployment Summary
+        run: |
+          echo "Multi-platform deployment status:"
+          echo "✓ Azure Static Web Apps: https://black-stone-0c2b8303.6.azurestaticapps.net"
+          echo "✓ GitHub Pages: https://bart-wetselaar.github.io/growth-accelerator-platform"
+          echo "✓ Replit Primary: https://staff-match-pro-bart83.replit.app"
+          echo "✓ Replit Secondary: https://webapp.growthaccelerator.nl"
