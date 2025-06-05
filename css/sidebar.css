@@ -1,0 +1,257 @@
+/* Sidebar Styles for Growth Accelerator Staffing Platform */
+
+/* Dashboard layout container */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: var(--ga-primary-dark);
+    border-right: 1px solid var(--ga-border);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    position: fixed; /* Make it fixed position */
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1030; /* Higher z-index to ensure it's above other content */
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-collapsed {
+    width: 80px;
+}
+
+.sidebar-collapsed .logo-text,
+.sidebar-collapsed .sidebar-menu-text,
+.sidebar-collapsed .user-info {
+    display: none;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ga-border);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: white;
+}
+
+.toggle-sidebar {
+    background: transparent;
+    border: none;
+    color: var(--ga-text);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.15s ease;
+}
+
+.toggle-sidebar:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar-menu-item {
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-menu-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--ga-text-light);
+    text-decoration: none;
+    border-radius: 0.25rem;
+    margin: 0 0.5rem;
+    transition: all 0.15s ease;
+}
+
+.sidebar-menu-link:hover,
+.sidebar-menu-link.active {
+    background-color: rgba(255, 107, 107, 0.1);
+    color: var(--ga-light);
+}
+
+.sidebar-menu-icon {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.sidebar-menu-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-collapsed .sidebar-menu-link {
+    padding: 0.75rem;
+    justify-content: center;
+}
+
+.sidebar-footer {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid var(--ga-border);
+    gap: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--ga-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+}
+
+.user-info {
+    margin-left: 0.5rem;
+    overflow: hidden;
+}
+
+.user-name {
+    font-weight: 500;
+    margin-bottom: 0;
+    line-height: 1.2;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    font-size: 0.8rem;
+    color: var(--ga-text-light);
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    transition: margin-left 0.3s ease;
+    overflow: auto;
+    margin-left: 260px; /* Match sidebar width */
+}
+
+.main-content-expanded {
+    margin-left: 80px; /* Match collapsed sidebar width */
+}
+
+/* Header Section */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--ga-border);
+    background-color: var(--ga-primary);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-title h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.header-subtitle {
+    color: var(--ga-text-light);
+    margin-bottom: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notification-bell {
+    position: relative;
+    margin-right: 1rem;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    height: 18px;
+    width: 18px;
+    background-color: var(--ga-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Responsive adjustments - Keep sidebar visible on all devices */
+@media (max-width: 991.98px) {
+    .sidebar {
+        width: 260px; /* Keep sidebar width consistent */
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        z-index: 1050; 
+        /* No translation/transform - keep it visible */
+    }
+    
+    .sidebar-collapsed {
+        width: 80px; /* Keep collapsed sidebar width consistent */
+    }
+    
+    .main-content {
+        margin-left: 260px; /* Match sidebar width */
+    }
+    
+    .main-content-expanded {
+        margin-left: 80px; /* Match collapsed sidebar width */
+    }
+}
