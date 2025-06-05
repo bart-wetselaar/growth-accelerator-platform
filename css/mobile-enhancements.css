@@ -1,0 +1,146 @@
+/**
+ * Growth Accelerator Staffing Platform
+ * Mobile Enhancement Styles - Improves UX on mobile devices
+ */
+
+/* Increase touch target sizes on mobile */
+@media (max-width: 767.98px) {
+    /* Make buttons larger on mobile for easier tapping */
+    .btn {
+        padding: 0.5rem 1rem;
+        min-height: 44px;
+    }
+    
+    /* Increase form control height for better touch targets */
+    .form-control,
+    .form-select {
+        min-height: 44px;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* Improve checkbox and radio button touch areas */
+    .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-top: 0.125rem;
+    }
+    
+    /* Adjust spacing for mobile forms */
+    .form-group, .mb-3, .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    /* Improve table display on small screens */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Make cards take full width */
+    .card {
+        width: 100%;
+    }
+    
+    /* Adjust navigation elements */
+    .nav-link {
+        padding: 0.75rem 1rem;
+    }
+    
+    /* Fix for workflow progress steps on mobile */
+    .progress-steps {
+        padding: 0 5px;
+    }
+    
+    .progress-step-icon {
+        width: 24px !important;
+        height: 24px !important;
+        padding: 2px !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .progress-step-label {
+        font-size: 0.65rem !important;
+    }
+    
+    /* Ensure modals are usable on mobile */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+    
+    /* Increase font sizes slightly for readability */
+    body {
+        font-size: 16px;
+    }
+    
+    /* Adjust column layouts to stack properly */
+    .row [class^="col-"] {
+        margin-bottom: 1rem;
+    }
+    
+    /* Remove bottom margin from last column in a row */
+    .row [class^="col-"]:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Fix for iOS zoom on input focus */
+@media (max-width: 767.98px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="url"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Provide feedback for pressed buttons */
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Visual indication for disabled buttons */
+.btn.disabled, 
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Improve focus indicators for accessibility */
+a:focus, 
+button:focus, 
+input:focus, 
+select:focus, 
+textarea:focus {
+    outline: 2px solid #0052cc;
+    outline-offset: 2px;
+}
+
+/* Remove outline for mouse users while keeping it for keyboard navigation */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Custom scrollbar for better touch scrolling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0052cc;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0043a4;
+}
