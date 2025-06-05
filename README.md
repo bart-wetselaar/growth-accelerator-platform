@@ -2,10 +2,11 @@
 
 A sophisticated AI-powered Staffing and Deployment Acceleration Platform with Azure Static Web App frontend and Replit backend integration.
 
-## 🚀 Live Deployment
+## 🚀 Live Production Deployment
 
-- **Frontend**: Azure Static Web Apps (Global CDN)
-- **Backend**: Replit (Live APIs)
+- **Frontend**: Azure Static Web Apps (Global CDN) - https://black-stone-0c2b8303.6.azurestaticapps.net
+- **Backend Primary**: https://staff-match-pro-bart83.replit.app
+- **Backend Secondary**: https://webapp.growthaccelerator.nl
 - **Database**: PostgreSQL on Replit
 
 ## 📁 Project Structure
@@ -28,19 +29,20 @@ A sophisticated AI-powered Staffing and Deployment Acceleration Platform with Az
 
 ## 🔗 API Integration
 
-The static frontend connects to live Replit backend APIs:
+The static frontend connects to production Replit backend APIs:
 
-- **Base URL**: `https://eb44c92f-21f3-4aed-9cb2-28ca14f82460-00-296c0ebbkj4nd.riker.replit.dev`
+- **Primary URL**: https://staff-match-pro-bart83.replit.app
+- **Secondary URL**: https://webapp.growthaccelerator.nl
 - **Endpoints**: Jobs, Candidates, Clients, Applications, AI Suggestions
 - **Authentication**: Session-based with CORS support
-- **Error Handling**: Automatic retry with exponential backoff
+- **Error Handling**: Automatic retry with failover between URLs
 
 ## 🛠 Features
 
 - **Real-time Data**: Connects to live PostgreSQL database
 - **Responsive Design**: Bootstrap 5 dark theme
 - **Client-side Routing**: Hash-based navigation
-- **Connection Monitoring**: Auto-retry failed requests
+- **Connection Monitoring**: Auto-retry failed requests with URL failover
 - **Toast Notifications**: User feedback system
 - **Global CDN**: Azure edge locations worldwide
 
@@ -60,7 +62,7 @@ This is a production-ready static web application that maintains the exact desig
 
 ## 📞 Backend APIs
 
-All data operations are handled by the live Replit backend:
+All data operations are handled by the production Replit backend:
 - Job listings and management
 - Candidate profiles and applications
 - Client information and relationships
@@ -71,3 +73,9 @@ All data operations are handled by the live Replit backend:
 
 Automatic deployment via GitHub Actions to Azure Static Web Apps.
 Push to `main` branch to trigger deployment.
+
+## Production URLs
+
+- Azure Static Web App: https://black-stone-0c2b8303.6.azurestaticapps.net
+- Replit Production Primary: https://staff-match-pro-bart83.replit.app
+- Replit Production Secondary: https://webapp.growthaccelerator.nl
