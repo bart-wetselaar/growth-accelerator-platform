@@ -6,6 +6,8 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, ForeignKey, Float, UniqueConstraint, JSON
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
+
+# Import db from app module to avoid circular imports
 from app import db
 
 class User(UserMixin, db.Model):
@@ -24,7 +26,7 @@ class User(UserMixin, db.Model):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
-        display_name = self.username or self.email or self.id
+        display_name = getattr(self, 'username', None) or getattr(self, 'email', None) or str(getattr(self, 'id', 'Unknown'))
         return f'<User {display_name}>'
         
     # Override UserMixin's is_active property
