@@ -27,6 +27,8 @@ logger = logging.getLogger(__name__)
 from app import app, db
 from models import User, Client, Consultant, Job, Application, Placement, Skill, JobSkill
 
+# Health check endpoint - ensuring no conflicts
+
 # Initialize Azure health check routes
 try:
     from azure_health import register_azure_health_routes
@@ -868,8 +870,33 @@ def index():
         return render_template('staffing_app/landing.html')
     except Exception as e:
         logger.error(f"Landing template error: {e}")
-        # Fallback to dashboard redirect if template fails
-        return redirect(url_for('dashboard'))
+        # Simple fallback if template fails
+        return """
+        <html>
+        <head>
+            <title>Growth Accelerator Platform</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; }
+                .logo { text-align: center; margin-bottom: 30px; }
+                .nav { text-align: center; margin: 20px 0; }
+                .nav a { margin: 0 15px; color: #007bff; text-decoration: none; }
+            </style>
+        </head>
+        <body>
+            <div class="logo">
+                <h1>Growth Accelerator Platform</h1>
+                <p>Staffing & Recruitment Management System</p>
+            </div>
+            <div class="nav">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/consultants">Consultants</a>
+                <a href="/jobs">Jobs</a>
+                <a href="/matching">Matching</a>
+                <a href="/reports">Reports</a>
+            </div>
+        </body>
+        </html>
+        """
     
 @app.route('/staffing')
 def staffing_home():
