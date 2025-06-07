@@ -2,10 +2,12 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build_and_deploy_job:
@@ -13,19 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
-          
+          lfs: false
+      
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: d262909344a5bf5438bcd8c4300b773d01f4f02913597ad18b59dbcb3ad660b706-787fc6fe-e118-4cbe-923d-c649ae30980400301190cf2b8303
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"
-          api_location: ""
+          app_location: "/static_deployment"
           output_location: ""
 
   close_pull_request_job:
@@ -37,5 +39,5 @@ jobs:
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: d262909344a5bf5438bcd8c4300b773d01f4f02913597ad18b59dbcb3ad660b706-787fc6fe-e118-4cbe-923d-c649ae30980400301190cf2b8303
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "close"
