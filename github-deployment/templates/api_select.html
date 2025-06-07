@@ -1,0 +1,125 @@
+{% extends "unified_dashboard/layout_with_sidebar.html" %}
+
+{% block title %}Growth Accelerator Staffing Platform{%endblock %}
+
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Accelerator Staffing API Hub</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <style>
+        .logo {
+            max-width: 200px;
+            margin-bottom: 2rem;
+        }
+        .integration-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .integration-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .btn-ga-primary {
+            background-color: #6f42c1;
+            border-color: #6f42c1;
+        }
+        .btn-ga-primary:hover {
+            background-color: #5a32a3;
+            border-color: #5a32a3;
+        }
+        .btn-ga-secondary {
+            background-color: #20c997;
+            border-color: #20c997;
+        }
+        .btn-ga-secondary:hover {
+            background-color: #1ba67e;
+            border-color: #1ba67e;
+        }
+        .header {
+            background-color: #1e1e1e;
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container text-center">
+            <img  loading="lazy"src="/static/logo.svg" alt="Growth Accelerator Logo" class="logo">
+            <h1 class="display-4">Growth Accelerator Staffing</h1>
+            <p class="lead">Select the Integration Hub for your API needs</p>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="integration-card h-100">
+                    <div class="card-icon text-primary">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <h3>Wavebox Integration Hub</h3>
+                    <p class="text-muted">Connect to our Wavebox-powered central management system for complete job, candidate, and placement management.</p>
+                    <ul>
+                        <li>Full consultant profile management</li>
+                        <li>Comprehensive job and application tracking</li>
+                        <li>Placement and billing integration</li>
+                        <li>Automatic LinkedIn and Workable synchronization</li>
+                    </ul>
+                    <a href="/unified-dashboard/" class="btn btn-ga-primary btn-lg mt-3 w-100">Use Wavebox Hub</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="integration-card h-100">
+                    <div class="card-icon text-info">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                    </div>
+                    <h3>Squarespace Integration Hub</h3>
+                    <p class="text-muted">Connect directly to our Squarespace platform for seamless website integration with job listings and applications.</p>
+                    <ul>
+                        <li>Direct integration with Squarespace website</li>
+                        <li>Job listing synchronization</li>
+                        <li>Application form integration</li>
+                        <li>Streamlined website visitor experience</li>
+                    </ul>
+                    <a href="/squarespace-hub/" class="btn btn-ga-secondary btn-lg mt-3 w-100">Use Squarespace Hub</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-top">
+            <h2>Unified API Documentation</h2>
+            <p>Access our combined API that works with both integration hubs:</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="/api/unified?hub=wavebox" class="btn btn-outline-primary me-md-2">Wavebox API Docs</a>
+                <a href="/api/unified?hub=squarespace" class="btn btn-outline-info">Squarespace API Docs</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2025 Growth Accelerator Staffing</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light me-3">Terms</a>
+                    <a href="#" class="text-light me-3">Privacy</a>
+                    <a href="#" class="text-light">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
