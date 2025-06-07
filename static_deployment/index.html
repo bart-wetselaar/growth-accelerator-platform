@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Accelerator Staffing Platform</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Core styles extracted from your existing CSS */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+        }
+        
+        .app-container {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar {
+            width: 280px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            z-index: 1050;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        
+        .logo-container {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu-link {
+            display: block;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #dee2e6;
+            margin-left: 280px;
+        }
+        
+        .platform-header {
+            background: white;
+            padding: 20px 30px;
+            margin-left: 280px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+        
+        .status-badge {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content, .top-header, .platform-header {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <img src="https://via.placeholder.com/60x60/ffffff/007bff?text=GA" alt="GA Logo" style="width: 60px; height: 60px; border-radius: 10px;">
+                <div class="logo-text">Growth Accelerator</div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#" class="sidebar-menu-link">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-menu-link">
+                    <i class="fas fa-users me-2"></i>
+                    <span>Consultants</span>
+                </a>
+                <a href="#" class="sidebar-menu-link">
+                    <i class="fas fa-briefcase me-2"></i>
+                    <span>Jobs</span>
+                </a>
+                <a href="#" class="sidebar-menu-link">
+                    <i class="fas fa-chart-line me-2"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="sidebar-menu-link">
+                    <i class="fas fa-cog me-2"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <div class="top-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Growth Accelerator Platform</h4>
+                    <span class="status-badge">Azure Static Web App</span>
+                </div>
+            </div>
+            
+            <!-- Platform Header -->
+            <div class="platform-header">
+                <h1 class="mb-2">Staffing & Recruitment Platform</h1>
+                <p class="text-muted mb-0">Intelligent consultant-job matching and workflow management</p>
+            </div>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5>Consultant Management</h5>
+                    <p class="text-muted">Manage consultant profiles, skills, and availability</p>
+                    <div class="mt-3">
+                        <small class="text-success">✓ Active Module</small>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h5>Job Board</h5>
+                    <p class="text-muted">Post and manage job opportunities</p>
+                    <div class="mt-3">
+                        <small class="text-success">✓ Active Module</small>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h5>AI Matching</h5>
+                    <p class="text-muted">Intelligent consultant-job matching system</p>
+                    <div class="mt-3">
+                        <small class="text-success">✓ Active Module</small>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h5>Analytics</h5>
+                    <p class="text-muted">Performance metrics and insights</p>
+                    <div class="mt-3">
+                        <small class="text-success">✓ Active Module</small>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h5>API Integration</h5>
+                    <p class="text-muted">Workable, LinkedIn, and third-party connections</p>
+                    <div class="mt-3">
+                        <small class="text-success">✓ Active Module</small>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h5>Cloud Deployment</h5>
+                    <p class="text-muted">Multi-platform deployment and scaling</p>
+                    <div class="mt-3">
+                        <small class="text-success">✓ Azure Static Web App</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
