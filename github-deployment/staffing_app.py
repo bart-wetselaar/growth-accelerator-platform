@@ -2570,9 +2570,18 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Logout route"""
-    # In a real implementation, this would clear the user's session
-    flash("You have been logged out", "success")
+    """Logout route with proper session handling"""
+    from flask_login import logout_user, current_user
+    
+    # Check if user is logged in
+    if current_user.is_authenticated:
+        logout_user()
+        flash("You have been successfully logged out", "success")
+    
+    # Clear all session data
+    session.clear()
+    
+    # Redirect to landing page
     return redirect(url_for('index'))
 
 @app.route('/workspace')
