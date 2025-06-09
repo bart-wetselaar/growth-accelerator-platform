@@ -862,6 +862,30 @@ def serve_static(filename):
     """Serve static files"""
     return send_from_directory('static', filename)
 
+# Custom domain enforcement for app.growthaccelerator.nl
+@app.before_request
+def enforce_custom_domain():
+    """Ensure only app.growthaccelerator.nl domain is used for GA app"""
+    custom_domain = "app.growthaccelerator.nl"
+    
+    # Skip domain enforcement for local development
+    if request.host and 'localhost' not in request.host and '127.0.0.1' not in request.host and 'replit.dev' not in request.host:
+        # If accessing via azurewebsites.net, redirect to custom domain
+        if 'azurewebsites.net' in request.host and custom_domain not in request.host:
+            return redirect(f'https://{custom_domain}{request.path}', code=301)
+
+# Domain verification endpoint
+@app.route('/domain-check')
+def domain_check():
+    """Verify custom domain configuration"""
+    return jsonify({
+        'custom_domain': 'app.growthaccelerator.nl',
+        'current_host': request.host,
+        'app_name': 'GA',
+        'azure_app': 'Growth Accelerator Platform',
+        'timestamp': datetime.now().isoformat()
+    })
+
 # Main website routes
 @app.route('/')
 def index():
@@ -2546,9 +2570,18 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Logout route"""
-    # In a real implementation, this would clear the user's session
-    flash("You have been logged out", "success")
+    """Logout route with proper session handling"""
+    from flask_login import logout_user, current_user
+    
+    # Check if user is logged in
+    if current_user.is_authenticated:
+        logout_user()
+        flash("You have been successfully logged out", "success")
+    
+    # Clear all session data
+    session.clear()
+    
+    # Redirect to landing page
     return redirect(url_for('index'))
 
 @app.route('/workspace')
