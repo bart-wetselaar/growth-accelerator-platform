@@ -1,20 +1,20 @@
 """
-Growth Accelerator Platform - Azure Production Entry Point
-Forces Flask application deployment
+Growth Accelerator Platform - Azure Flask App
+Explicit Flask application entry point
 """
 
 import os
 import logging
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 
-# Set up production logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Import Flask app
+# Import the Flask app
 from app import app, db
+
+logger.info("=== GROWTH ACCELERATOR PLATFORM FLASK APP STARTING ===")
 
 # Import models and routes
 try:
@@ -40,23 +40,34 @@ try:
 except Exception as e:
     logger.error(f"Database initialization failed: {str(e)}")
 
-# Production configuration
+# Production configuration for Azure
 app.config['ENV'] = 'production'
 app.config['DEBUG'] = False
 app.config['PREFERRED_URL_SCHEME'] = 'https'
 
-# Ensure this is recognized as a Flask application
+# Override routes to ensure Flask app is served
+@app.route('/azure-health')
+def azure_health():
+    """Azure-specific health check"""
+    return {
+        "status": "healthy",
+        "app": "Growth Accelerator Platform Flask",
+        "platform": "Azure Web App",
+        "version": "1.0"
+    }, 200
+
+@app.route('/app-info')
+def app_info():
+    """Application information endpoint"""
+    return {
+        "name": "Growth Accelerator Platform",
+        "type": "Flask Application",
+        "deployment": "Azure Web App",
+        "status": "active"
+    }, 200
+
+# Ensure this is the WSGI application
 application = app
-
-# Health check endpoint for Azure
-@app.route('/health')
-def health_check():
-    return {"status": "healthy", "app": "Growth Accelerator Platform Flask"}, 200
-
-# Root route override
-@app.route('/')
-def force_flask_index():
-    return staffing_app.index()
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8000))
