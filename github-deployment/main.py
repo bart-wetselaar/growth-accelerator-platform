@@ -1,60 +1,64 @@
 """
-Growth Accelerator Platform - Main Entry Point
-Production-ready deployment configuration
+Growth Accelerator Platform - Azure Production Entry Point
+Forces Flask application deployment
 """
 
 import os
 import logging
-from app import app, db
 
-# Configure production logging
+# Set up production logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Import models to register them with SQLAlchemy
+# Import Flask app
+from app import app, db
+
+# Import models and routes
 try:
     import models
     logger.info("Models imported successfully")
 except Exception as e:
     logger.error(f"Error importing models: {str(e)}")
 
-# Import routes
 try:
     import staffing_app
     logger.info("Staffing app routes imported successfully")
 except Exception as e:
     logger.error(f"Error importing staffing app: {str(e)}")
 
-# Create all tables within app context with error handling
+# Initialize database
 try:
     with app.app_context():
-        if hasattr(app.config, 'SQLALCHEMY_DATABASE_URI') and app.config.get('SQLALCHEMY_DATABASE_URI'):
+        if app.config.get('SQLALCHEMY_DATABASE_URI'):
             db.create_all()
             logger.info("Database tables created successfully")
         else:
             logger.info("No database configured, skipping table creation")
 except Exception as e:
-    logger.error(f"Database table creation failed: {str(e)}")
-    logger.info("Application will continue without database connectivity")
+    logger.error(f"Database initialization failed: {str(e)}")
 
 # Production configuration
-if os.environ.get('REPLIT_DEPLOYMENT') or os.environ.get('PORT'):
-    app.config['ENV'] = 'production'
-    app.config['DEBUG'] = False
-    app.config['PREFERRED_URL_SCHEME'] = 'https'
-    logger.info("Production environment detected")
+app.config['ENV'] = 'production'
+app.config['DEBUG'] = False
+app.config['PREFERRED_URL_SCHEME'] = 'https'
 
-# Configure for Replit deployment
-app.config['SERVER_NAME'] = None  # Allow any domain
-app.config['APPLICATION_ROOT'] = '/'
-
-# Ensure application is available for production deployment
+# Ensure this is recognized as a Flask application
 application = app
 
+# Health check endpoint for Azure
+@app.route('/health')
+def health_check():
+    return {"status": "healthy", "app": "Growth Accelerator Platform Flask"}, 200
+
+# Root route override
+@app.route('/')
+def force_flask_index():
+    return staffing_app.index()
+
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    logger.info(f"Starting Growth Accelerator Platform on port {port}")
+    port = int(os.environ.get('PORT', 8000))
+    logger.info(f"Starting Growth Accelerator Platform Flask App on port {port}")
     app.run(host='0.0.0.0', port=port, debug=False)
