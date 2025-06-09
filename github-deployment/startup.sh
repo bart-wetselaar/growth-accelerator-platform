@@ -1,16 +1,9 @@
 #!/bin/bash
-echo "Starting Growth Accelerator Platform for GA App (Resource Group: GA_group)..."
+echo "=== Growth Accelerator Platform Flask Startup ==="
 cd /home/site/wwwroot
-
-# Set GA-specific environment variables
-export AZURE_APP_NAME=GA
-export AZURE_RESOURCE_GROUP=GA_group
-export FLASK_ENV=production
-export DEPLOYMENT_SOURCE=github-deployment
-
-# Install dependencies
+echo "Installing dependencies..."
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-
-# Start application with GA-specific configuration
-gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --log-level info main:app
+echo "Dependencies installed"
+echo "Starting Flask application with Gunicorn..."
+gunicorn --bind=0.0.0.0:8000 --timeout 600 --workers=4 main:app
