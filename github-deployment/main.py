@@ -1,75 +1,74 @@
 """
-Growth Accelerator Platform - Azure Flask App
-Explicit Flask application entry point
+Growth Accelerator Platform - Azure Production Entry Point
+Configured for ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net
 """
 
 import os
 import logging
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Configure logging for Azure
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
-# Import the Flask app
-from app import app, db
+logger.info("=== GROWTH ACCELERATOR PLATFORM STARTING ON AZURE ===")
+logger.info("Domain: ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net")
 
-logger.info("=== GROWTH ACCELERATOR PLATFORM FLASK APP STARTING ===")
+# Import Flask app
+from app import app, db
 
 # Import models and routes
 try:
     import models
     logger.info("Models imported successfully")
 except Exception as e:
-    logger.error(f"Error importing models: {str(e)}")
+    logger.error(f"Models import error: {str(e)}")
 
 try:
     import staffing_app
     logger.info("Staffing app routes imported successfully")
 except Exception as e:
-    logger.error(f"Error importing staffing app: {str(e)}")
+    logger.error(f"Staffing app import error: {str(e)}")
 
 # Initialize database
 try:
     with app.app_context():
         if app.config.get('SQLALCHEMY_DATABASE_URI'):
             db.create_all()
-            logger.info("Database tables created successfully")
+            logger.info("Database initialized")
         else:
-            logger.info("No database configured, skipping table creation")
+            logger.info("No database configured")
 except Exception as e:
-    logger.error(f"Database initialization failed: {str(e)}")
+    logger.error(f"Database error: {str(e)}")
 
-# Production configuration for Azure
+# Azure production configuration
 app.config['ENV'] = 'production'
 app.config['DEBUG'] = False
 app.config['PREFERRED_URL_SCHEME'] = 'https'
 
-# Override routes to ensure Flask app is served
-@app.route('/azure-health')
-def azure_health():
-    """Azure-specific health check"""
+# Health check for Azure
+@app.route('/azure-status')
+def azure_status():
     return {
         "status": "healthy",
-        "app": "Growth Accelerator Platform Flask",
-        "platform": "Azure Web App",
+        "app": "Growth Accelerator Platform",
+        "domain": "ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net",
+        "custom_domain": "app.growthaccelerator.nl",
         "version": "1.0"
     }, 200
 
-@app.route('/app-info')
-def app_info():
-    """Application information endpoint"""
-    return {
-        "name": "Growth Accelerator Platform",
-        "type": "Flask Application",
-        "deployment": "Azure Web App",
-        "status": "active"
-    }, 200
+# Override default route to ensure Flask serves content
+@app.route('/test-flask')
+def test_flask():
+    return "<h1>Growth Accelerator Platform Flask App Active</h1><p>Deployed on Azure Web App</p>"
 
-# Ensure this is the WSGI application
+# WSGI application for Azure
 application = app
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8000))
-    logger.info(f"Starting Growth Accelerator Platform Flask App on port {port}")
+    logger.info(f"Starting on port {port}")
     app.run(host='0.0.0.0', port=port, debug=False)
