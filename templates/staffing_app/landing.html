@@ -1,0 +1,494 @@
+{% extends 'staffing_app/layout.html' %}
+
+{% block title %}Growth Accelerator Staffing Platform{% endblock %}
+
+{% block additional_styles %}
+<style>
+    /* Override layout styles for landing page only */
+    .app-container {
+        height: 100vh;
+        overflow-y: auto;
+    }
+    
+    /* Force sidebar to be fixed and expanded on landing page */
+    .sidebar {
+        width: 280px !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        height: 100vh !important;
+        z-index: 1050 !important;
+    }
+    
+    /* Ensure sidebar content is visible */
+    .sidebar .logo-text,
+    .sidebar .sidebar-menu-link span {
+        display: block !important;
+    }
+    
+    /* Responsive mobile adjustments */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100% !important;
+            height: auto !important;
+            position: relative !important;
+            z-index: 1000 !important;
+        }
+        
+        .main-content {
+            margin-left: 0 !important;
+            padding: 1rem !important;
+        }
+        
+        .top-header {
+            margin-left: 0 !important;
+            position: relative !important;
+            padding: 1rem !important;
+        }
+        
+        .platform-header {
+            margin-left: 0 !important;
+            position: relative !important;
+            padding: 0.5rem 1rem !important;
+        }
+        
+        .app-container {
+            flex-direction: column !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .sidebar {
+            padding: 0.5rem !important;
+        }
+        
+        .sidebar-menu-link {
+            padding: 0.6rem 1rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        .logo-text {
+            font-size: 1rem !important;
+        }
+        
+        .main-content {
+            padding: 0.5rem !important;
+        }
+        
+        /* Mobile AI assistant adjustments */
+        #aiChatWindow {
+            width: calc(100vw - 20px) !important;
+            height: 300px !important;
+            right: 10px !important;
+            bottom: 70px !important;
+            max-width: 350px !important;
+        }
+        
+        #aiAssistantButton {
+            bottom: 10px !important;
+            right: 10px !important;
+            width: 50px !important;
+            height: 50px !important;
+        }
+    }
+    
+    .top-header {
+        background-color: #00215e;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .wavebox-title {
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .platform-header {
+        background-color: #001a44;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .platform-title {
+        font-size: 1.8rem;
+        font-weight: 500;
+        margin: 0;
+    }
+    
+
+    
+    /* Ensure AI Assistant is visible on landing page */
+    .ai-assistant-container {
+        z-index: 9999 !important;
+    }
+    
+    .ai-assistant-button {
+        z-index: 9999 !important;
+    }
+    
+    .ai-chat-window {
+        z-index: 10000 !important;
+    }
+    
+    /* Proactive AI Animations */
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+        0% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(0.95); }
+    }
+    
+    @keyframes slideIn {
+        0% { transform: translateX(20px); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    .ai-button-attention {
+        animation: pulse 2s infinite;
+    }
+
+    
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .logo-container {
+        margin-bottom: 2rem;
+    }
+    
+    .logo-container img {
+        width: 120px;
+    }
+    
+    .platform-name {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .platform-description {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 2rem;
+    }
+    
+    .enter-button {
+        background-color: var(--ga-accent);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .enter-button:hover {
+        background-color: #ff7d7d;
+        transform: translateY(-2px);
+    }
+    
+    .workspace-button {
+        background-color: transparent;
+        color: var(--ga-accent);
+        border: 2px solid var(--ga-accent);
+        padding: 0.6rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    
+    .workspace-button:hover {
+        background-color: rgba(255, 107, 107, 0.1);
+    }
+    
+    .ga-logo {
+        color: white;
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if not embedded %}
+<div class="top-header">
+    <h1 class="wavebox-title">Growth Accelerator</h1>
+    <a href="{{ url_for('dashboard') }}" class="workspace-button">Open Workspace</a>
+</div>
+
+<div class="platform-header">
+    <h2 class="platform-title">Growth Accelerator Staffing Platform</h2>
+</div>
+{% else %}
+<!-- Simplified header for embedded mode -->
+<div class="platform-header">
+    <h2 class="platform-title">Growth Accelerator Staffing Platform</h2>
+</div>
+{% endif %}
+
+<div class="main-content">
+        <div class="logo-container">
+            <div class="ga-logo">
+                <i class="bi bi-layers"></i>
+            </div>
+        </div>
+        
+        <h1 class="platform-name">Growth Accelerator Staffing Platform</h1>
+        <p class="platform-description">Match. Onboard. Hire.</p>
+        
+        <a href="{{ url_for('dashboard') }}" class="enter-button">
+            <i class="bi bi-speedometer2 me-2"></i> Enter Workspace
+        </a>
+        
+        <!-- Login with LinkedIn button removed as requested -->
+        
+        <!-- Embedding instructions removed as requested -->
+    </div>
+</div>
+
+<!-- AI Assistant Chat Button -->
+<div style="position: fixed; bottom: 20px; right: 20px; z-index: 99999;">
+    <button id="aiAssistantBtn" onclick="toggleAIChat()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #001a44 0%, #002868 100%); border: none; box-shadow: 0 4px 20px rgba(0, 26, 68, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;" title="AI Assistant - Click for help!"
+        <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+        </svg>
+    </button>
+
+    <div id="aiChatWindow" style="position: fixed; bottom: 90px; right: 20px; width: 300px; height: 350px; background: white; border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); display: none; flex-direction: column; z-index: 100000; overflow: hidden;">
+        <div style="background: linear-gradient(135deg, #001a44 0%, #002868 100%); color: white; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 600;">🤖 Growth Accelerator Assistant</h3>
+            <button onclick="toggleAIChat()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">×</button>
+        </div>
+
+        <div id="aiChatMessages" style="flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;">
+            <div style="max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.4; background: linear-gradient(135deg, #001a44 0%, #002868 100%); color: white; align-self: flex-start; border-bottom-left-radius: 4px;">
+                Hello! I'm your Growth Accelerator AI assistant. I can help you with questions about staffing workflows, backoffice operations, and general recruitment guidance. How can I assist you today?
+            </div>
+        </div>
+
+        <div style="padding: 16px; border-top: 1px solid #e0e0e0; display: flex; gap: 8px;">
+            <textarea id="aiChatInput" placeholder="Ask me anything about Growth Accelerator..." rows="1" style="flex: 1; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 24px; font-size: 14px; outline: none; resize: none; font-family: inherit;"></textarea>
+            <button onclick="sendMessage()" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #001a44 0%, #002868 100%); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Proactive AI Assistant
+let hasGreeted = false;
+
+// Show proactive greeting when page loads
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        if (!hasGreeted) {
+            showProactiveGreeting();
+            hasGreeted = true;
+        }
+    }, 3000); // Wait 3 seconds after page load
+});
+
+function showProactiveGreeting() {
+    const chatWindow = document.getElementById('aiChatWindow');
+    const messagesContainer = document.getElementById('aiChatMessages');
+    const aiButton = document.getElementById('aiAssistantBtn');
+    
+    // Make button pulse to get attention
+    aiButton.classList.add('ai-button-attention');
+    
+    // Add proactive greeting message
+    const greetingDiv = document.createElement('div');
+    greetingDiv.style.cssText = 'max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.4; background: linear-gradient(135deg, #001a44 0%, #002868 100%); color: white; align-self: flex-start; border-bottom-left-radius: 4px; animation: slideIn 0.5s ease-out;';
+    greetingDiv.textContent = "👋 Welcome to Growth Accelerator! I'm here to help you navigate our staffing platform. Need assistance with anything?";
+    
+    // Clear existing messages and add greeting
+    messagesContainer.innerHTML = '';
+    messagesContainer.appendChild(greetingDiv);
+    
+    // Show chat window briefly to get attention
+    chatWindow.style.display = 'flex';
+    chatWindow.style.animation = 'bounceIn 0.6s ease-out';
+    
+    // Auto-hide after 6 seconds unless user interacts
+    setTimeout(function() {
+        if (chatWindow.style.display === 'flex') {
+            chatWindow.style.animation = 'fadeOut 0.5s ease-out';
+            setTimeout(() => {
+                chatWindow.style.display = 'none';
+                // Keep button pulsing to remind user AI is available
+                setTimeout(() => {
+                    aiButton.classList.remove('ai-button-attention');
+                }, 10000); // Stop pulsing after 10 more seconds
+            }, 500);
+        }
+    }, 6000);
+}
+
+function toggleAIChat() {
+    const chatWindow = document.getElementById('aiChatWindow');
+    const isVisible = chatWindow.style.display === 'flex';
+    chatWindow.style.display = isVisible ? 'none' : 'flex';
+    
+    if (!isVisible) {
+        // Focus input when opening
+        document.getElementById('aiChatInput').focus();
+    }
+}
+
+async function sendMessage() {
+    const input = document.getElementById('aiChatInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    // Add user message
+    addMessage(message, 'user');
+    input.value = '';
+
+    try {
+        const response = await fetch('/api/ai/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: message })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        console.log('AI Response:', result); // Debug log
+        
+        if (result.response) {
+            addMessage(result.response, 'assistant');
+        } else if (result.error) {
+            addMessage(`Error: ${result.error}`, 'assistant');
+        } else {
+            addMessage('Sorry, I received an unexpected response.', 'assistant');
+        }
+    } catch (error) {
+        console.error('AI Chat Error:', error); // Debug log
+        addMessage('I\'m having trouble connecting. Please try again.', 'assistant');
+    }
+}
+
+function addMessage(content, sender) {
+    const messagesContainer = document.getElementById('aiChatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.style.cssText = sender === 'user' 
+        ? 'max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.4; background: #f0f0f0; align-self: flex-end; border-bottom-right-radius: 4px;'
+        : 'max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.4; background: linear-gradient(135deg, #001a44 0%, #002868 100%); color: white; align-self: flex-start; border-bottom-left-radius: 4px;';
+    messageDiv.textContent = content;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Proactive AI Assistant Features
+let hasShownWelcome = false;
+
+function showProactiveWelcome() {
+    if (hasShownWelcome) return;
+    
+    setTimeout(() => {
+        const button = document.querySelector('[onclick="toggleAIChat()"]');
+        if (button) {
+            // Add pulsing animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); box-shadow: 0 4px 20px rgba(0, 26, 68, 0.4); }
+                    50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(0, 26, 68, 0.6); }
+                    100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0, 26, 68, 0.4); }
+                }
+            `;
+            document.head.appendChild(style);
+            button.style.animation = 'pulse 2s infinite';
+            
+            // Show welcome tooltip
+            const tooltip = document.createElement('div');
+            tooltip.innerHTML = '💬 Hi! Need help with the platform?';
+            tooltip.style.cssText = `
+                position: fixed; 
+                bottom: 90px; 
+                right: 25px; 
+                background: #001a44; 
+                color: white; 
+                padding: 8px 12px; 
+                border-radius: 8px; 
+                font-size: 13px; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 99998;
+                cursor: pointer;
+            `;
+            
+            tooltip.onclick = () => {
+                toggleAIChat();
+                tooltip.remove();
+                button.style.animation = '';
+            };
+            
+            document.body.appendChild(tooltip);
+            
+            setTimeout(() => {
+                if (tooltip.parentNode) {
+                    tooltip.style.opacity = '0';
+                    setTimeout(() => tooltip.remove(), 300);
+                    button.style.animation = '';
+                }
+            }, 6000);
+        }
+        hasShownWelcome = true;
+    }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', showProactiveWelcome);
+
+// Enhanced toggle function with proactive messaging
+const originalToggle = window.toggleAIChat;
+window.toggleAIChat = function() {
+    const chatWindow = document.getElementById('aiChatWindow');
+    const isVisible = chatWindow.style.display === 'flex';
+    chatWindow.style.display = isVisible ? 'none' : 'flex';
+    
+    if (!isVisible) {
+        const messages = document.getElementById('aiChatMessages');
+        if (messages.children.length === 1) {
+            setTimeout(() => {
+                addMessage("I see you're exploring Growth Accelerator! I can help you navigate the platform, explain features, or answer questions about staffing workflows. What would you like to know?", 'assistant');
+            }, 800);
+        }
+        setTimeout(() => {
+            document.getElementById('aiChatInput').focus();
+        }, 1000);
+    }
+};
+</script>
+
+{% endblock %}
