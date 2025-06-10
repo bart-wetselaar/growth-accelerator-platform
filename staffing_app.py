@@ -792,6 +792,34 @@ def api_squarespace_sync_all(data):
             "error": str(e)
         }), 500
 
+@app.route('/api/deploy/sync', methods=['POST'])
+@csrf.exempt
+def deploy_sync():
+    """Trigger deployment sync to GitHub and Azure"""
+    try:
+        from deployment_sync import DeploymentSync
+        import threading
+        
+        def sync_deployment():
+            sync = DeploymentSync()
+            sync.execute_full_sync()
+        
+        # Run sync in background thread
+        thread = threading.Thread(target=sync_deployment, daemon=True)
+        thread.start()
+        
+        return jsonify({
+            "status": "triggered",
+            "message": "Deployment sync initiated",
+            "timestamp": datetime.utcnow().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.utcnow().isoformat()
+        }), 500
+
 # Error handling
 @app.errorhandler(Exception)
 def handle_exception(e):
