@@ -40,6 +40,13 @@ except Exception as e:
     logger.error(f"Database table creation failed: {str(e)}")
     logger.info("Application will continue without database connectivity")
 
+# Auto-sync deployment to GitHub and Azure
+try:
+    import replit_deploy_hook
+    logger.info("Deployment sync hook activated")
+except Exception as e:
+    logger.warning(f"Deployment sync hook not available: {e}")
+
 # Production configuration
 if os.environ.get('REPLIT_DEPLOYMENT') or os.environ.get('PORT'):
     app.config['ENV'] = 'production'
