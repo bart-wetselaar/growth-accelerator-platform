@@ -797,12 +797,12 @@ def api_squarespace_sync_all(data):
 def deploy_sync():
     """Trigger deployment sync to GitHub and Azure"""
     try:
-        from deployment_sync import DeploymentSync
         import threading
+        import subprocess
         
         def sync_deployment():
-            sync = DeploymentSync()
-            sync.execute_full_sync()
+            # Execute deployment sync with classic token
+            subprocess.run(['python', 'deployment_sync.py'], capture_output=True)
         
         # Run sync in background thread
         thread = threading.Thread(target=sync_deployment, daemon=True)
