@@ -1,82 +1,67 @@
+"""
+Growth Accelerator Platform - Main Entry Point
+Production-ready deployment configuration
+"""
+
 import os
-from flask import Flask
+import logging
+from app import app, db
 
-app = Flask(__name__)
+# Configure production logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-@app.route('/')
-def home():
-    return """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Growth Accelerator Platform</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
-        .container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .header { text-align: center; color: #2c3e50; margin-bottom: 30px; }
-        .status { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 20px 0; text-align: center; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0; }
-        .feature { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; }
-        .nav { text-align: center; margin: 30px 0; }
-        .nav a { display: inline-block; padding: 10px 20px; margin: 0 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Growth Accelerator Platform</h1>
-            <p>Intelligent Staffing & Recruitment Management</p>
-        </div>
-        
-        <div class="status">
-            <strong>Successfully deployed on Azure Web App</strong><br>
-            Flask application running on ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>AI Matching</h3>
-                <p>Intelligent candidate-job matching with machine learning algorithms</p>
-            </div>
-            <div class="feature">
-                <h3>Workable Integration</h3>
-                <p>Seamless ATS integration for streamlined recruitment workflows</p>
-            </div>
-            <div class="feature">
-                <h3>Analytics Dashboard</h3>
-                <p>Real-time insights and performance tracking</p>
-            </div>
-        </div>
-        
-        <div class="nav">
-            <a href="/workspace">Workspace</a>
-            <a href="/login">Login</a>
-            <a href="/health">Health Check</a>
-            <a href="/logout">Test Logout</a>
-        </div>
-    </div>
-</body>
-</html>
-    """
+# Import models to register them with SQLAlchemy
+try:
+    import models
+    logger.info("Models imported successfully")
+except Exception as e:
+    logger.error(f"Error importing models: {str(e)}")
 
-@app.route('/workspace')
-def workspace():
-    return {"workspace": "Growth Accelerator Platform", "status": "active", "features": ["Job Management", "Candidate Tracking", "AI Matching"]}
+# Import routes
+try:
+    import staffing_app
+    logger.info("Staffing app routes imported successfully")
+except Exception as e:
+    logger.error(f"Error importing staffing app: {str(e)}")
 
-@app.route('/login')
-def login():
-    return {"login": "Growth Accelerator Platform", "status": "ready"}
+# Create all tables within app context with error handling
+try:
+    with app.app_context():
+        if hasattr(app.config, 'SQLALCHEMY_DATABASE_URI') and app.config.get('SQLALCHEMY_DATABASE_URI'):
+            db.create_all()
+            logger.info("Database tables created successfully")
+        else:
+            logger.info("No database configured, skipping table creation")
+except Exception as e:
+    logger.error(f"Database table creation failed: {str(e)}")
+    logger.info("Application will continue without database connectivity")
 
-@app.route('/logout')
-def logout():
-    return {"logout": "successful", "message": "Session cleared and user logged out", "redirect": "/"}
+# Auto-sync deployment to GitHub and Azure
+try:
+    import replit_deploy_hook
+    logger.info("Deployment sync hook activated")
+except Exception as e:
+    logger.warning(f"Deployment sync hook not available: {e}")
 
-@app.route('/health')
-def health():
-    return {"status": "healthy", "app": "Growth Accelerator Platform", "platform": "Azure Web App", "logout_fix": "implemented"}
+# Production configuration
+if os.environ.get('REPLIT_DEPLOYMENT') or os.environ.get('PORT'):
+    app.config['ENV'] = 'production'
+    app.config['DEBUG'] = False
+    app.config['PREFERRED_URL_SCHEME'] = 'https'
+    logger.info("Production environment detected")
 
+# Configure for Replit deployment
+app.config['SERVER_NAME'] = None  # Allow any domain
+app.config['APPLICATION_ROOT'] = '/'
+
+# Ensure application is available for production deployment
 application = app
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 8000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get('PORT', 5000))
+    logger.info(f"Starting Growth Accelerator Platform on port {port}")
+    app.run(host='0.0.0.0', port=port, debug=False)
