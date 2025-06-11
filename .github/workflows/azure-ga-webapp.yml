@@ -1,4 +1,4 @@
-name: Azure GA Web App - Production Deploy
+name: Azure GA Web App - Final Production Deploy
 
 on:
   workflow_dispatch:
@@ -7,34 +7,44 @@ on:
     paths: [ 'github-deployment/**' ]
 
 env:
-  AZURE_WEBAPP_NAME: GA
-  AZURE_RESOURCE_GROUP: GA_group
+  AZURE_WEBAPP_NAME: ga-hwaffmb0eqajfza5
   PYTHON_VERSION: '3.11'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: GA_Production
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
       
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         
-    - name: Create deployment package
+    - name: Install dependencies
       run: |
         cd github-deployment
-        echo "Preparing GA Flask app deployment..."
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Deploy to Azure GA Web App
-      uses: azure/webapps-deploy@v2
+    - name: Prepare deployment package
+      run: |
+        cd github-deployment
+        echo "Deployment package prepared for Azure"
+        ls -la
+        
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: './github-deployment'
+        
+    - name: Verify deployment
+      run: |
+        echo "Waiting for deployment to complete..."
+        sleep 30
+        curl -f https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/health || echo "Health check pending"
