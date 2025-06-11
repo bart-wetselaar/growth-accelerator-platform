@@ -1,0 +1,36 @@
+name: Azure GA Web App - Fixed Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ 'github-deployment/**' ]
+
+env:
+  AZURE_WEBAPP_NAME: ga-hwaffmb0eqajfza5
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        cd github-deployment
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: './github-deployment'
