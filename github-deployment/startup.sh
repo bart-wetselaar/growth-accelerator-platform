@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Starting Growth Accelerator Platform on Azure..."
-export PYTHONPATH=/home/site/wwwroot:$PYTHONPATH
+echo "Initializing Growth Accelerator Platform on Azure..."
 cd /home/site/wwwroot
-python -m gunicorn --bind=0.0.0.0:8000 --workers=2 --timeout=120 main:application
+export PYTHONPATH=/home/site/wwwroot:$PYTHONPATH
+python -m gunicorn --bind=0.0.0.0:8000 --workers=2 --timeout=300 --keep-alive=2 app:application
