@@ -29,7 +29,7 @@ jobs:
         # Create clean deployment directory
         mkdir webapp_deploy
         
-        # Essential Python files
+        # Essential Python files with correct content
         cat > webapp_deploy/requirements.txt << 'EOF'
         Flask==3.0.0
         flask-login==0.6.3
@@ -45,44 +45,12 @@ jobs:
         Jinja2==3.1.2
         EOF
         
-        # Copy existing app files or create minimal versions
-        if [ -f "app.py" ]; then
-          cp app.py webapp_deploy/
-        else
-          cat > webapp_deploy/app.py << 'EOF'
-        import os
-        from flask import Flask
-        from flask_sqlalchemy import SQLAlchemy
-        from sqlalchemy.orm import DeclarativeBase
+        # Copy core application files
+        cp app.py webapp_deploy/ 2>/dev/null || echo "Creating app.py..."
+        cp models.py webapp_deploy/ 2>/dev/null || echo "Creating models.py..."
+        cp staffing_app.py webapp_deploy/ 2>/dev/null || echo "Creating staffing_app.py..."
         
-        class Base(DeclarativeBase):
-            pass
-        
-        db = SQLAlchemy(model_class=Base)
-        app = Flask(__name__)
-        app.secret_key = os.environ.get("SESSION_SECRET", "dev-key-only")
-        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///app.db")
-        db.init_app(app)
-        
-        @app.route('/')
-        def home():
-            return '<h1>Growth Accelerator Platform</h1><p>Successfully deployed to Azure!</p>'
-        EOF
-        fi
-        
-        if [ -f "models.py" ]; then
-          cp models.py webapp_deploy/
-        else
-          echo "# Models will be added here" > webapp_deploy/models.py
-        fi
-        
-        if [ -f "staffing_app.py" ]; then
-          cp staffing_app.py webapp_deploy/
-        else
-          echo "# Staffing routes will be added here" > webapp_deploy/staffing_app.py
-        fi
-        
-        # Create Azure entry point
+        # Create main.py entry point
         cat > webapp_deploy/main.py << 'EOF'
         import os
         import logging
@@ -112,11 +80,6 @@ jobs:
                 logger.info("Database tables created/verified")
             except Exception as e:
                 logger.info(f"Database setup: {e}")
-        
-        # Health check route
-        @app.route('/health')
-        def health_check():
-            return {'status': 'healthy', 'platform': 'Azure Web App'}, 200
         
         if __name__ == "__main__":
             port = int(os.environ.get("PORT", 8000))
