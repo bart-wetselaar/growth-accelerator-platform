@@ -1,13 +1,13 @@
-name: Azure Static Web Apps CI/CD
+name: Azure Static Web Apps CI/CD [DISABLED - Flask App Uses Web App Service]
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+  # Disabled - Growth Accelerator Platform is a Flask application that requires Azure Web App, not Static Web App
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run this disabled workflow'
+        required: false
+        default: 'false'
 
 jobs:
   build_and_deploy_job:
