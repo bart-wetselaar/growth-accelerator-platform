@@ -1,6 +1,6 @@
 name: Deploy GA Flask App to Azure
 
-on:
+on: # DISABLED - Use azure-webapp-deploy.yml
   workflow_dispatch:
   push:
     branches: [ main ]
@@ -8,14 +8,14 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: # DISABLED - Use azure-webapp-deploy.yml ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: # DISABLED - Use azure-webapp-deploy.yml '3.11'
         
     - name: Install dependencies
       run: |
