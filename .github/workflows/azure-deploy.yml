@@ -1,4 +1,4 @@
-name: Deploy Flask App to Azure Web App
+name: Deploy to Azure Web App (Flask)
 
 on:
   push:
@@ -22,31 +22,18 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Create virtual environment
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-
     - name: Install dependencies
       run: |
-        source venv/bin/activate
+        python -m pip install --upgrade pip
         pip install flask flask-login flask-sqlalchemy flask-wtf gunicorn requests sqlalchemy werkzeug psycopg2-binary
 
-    - name: Create requirements.txt
+    - name: Create requirements.txt for Azure
       run: |
-        source venv/bin/activate
         pip freeze > requirements.txt
 
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_GA }}
         package: '.'
-
-    - name: Post-deployment verification
-      run: |
-        echo "Deployment completed to https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
-        sleep 30
-        curl -f "https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/health" || echo "Health check pending..."
