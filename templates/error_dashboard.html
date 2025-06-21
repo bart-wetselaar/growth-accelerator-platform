@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Accelerator Platform - Error Monitoring Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .dashboard { max-width: 1400px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 2.5rem; font-weight: 700; margin-bottom: 10px; }
+        .subtitle { font-size: 1.2rem; opacity: 0.8; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        .card { 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 15px; 
+            padding: 25px; 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .card-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; color: #e0e7ff; }
+        
+        .status-indicator { 
+            display: inline-flex; 
+            align-items: center; 
+            padding: 8px 15px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+        .status-healthy { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #86efac; }
+        .status-warning { background: rgba(251, 191, 36, 0.2); border: 1px solid #fbbf24; color: #fde047; }
+        .status-error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; }
+        
+        .metric { margin: 15px 0; }
+        .metric-label { font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px; }
+        .metric-value { font-size: 1.5rem; font-weight: 700; }
+        
+        .error-list { max-height: 300px; overflow-y: auto; }
+        .error-item { 
+            background: rgba(239, 68, 68, 0.1); 
+            border-left: 3px solid #ef4444; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .error-time { font-size: 0.8rem; opacity: 0.7; }
+        
+        .diagnostic-item { margin: 12px 0; padding: 12px; border-radius: 8px; }
+        .diagnostic-pass { background: rgba(34, 197, 94, 0.1); border-left: 3px solid #22c55e; }
+        .diagnostic-fail { background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; }
+        
+        .refresh-btn { 
+            background: rgba(255,255,255,0.2); 
+            border: 1px solid rgba(255,255,255,0.3); 
+            color: white; 
+            padding: 12px 25px; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .refresh-btn:hover { background: rgba(255,255,255,0.3); }
+        
+        .auto-refresh { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: rgba(0,0,0,0.7); 
+            padding: 10px 20px; 
+            border-radius: 20px; 
+            font-size: 0.9rem;
+        }
+        
+        .chart-container { height: 200px; margin-top: 20px; }
+        .recommendation { 
+            background: rgba(99, 102, 241, 0.1); 
+            border-left: 3px solid #6366f1; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <div class="title">Error Monitoring Dashboard</div>
+            <div class="subtitle">Real-time system health and error tracking</div>
+        </div>
+        
+        <div class="auto-refresh">
+            Auto-refresh: <span id="countdown">30</span>s
+        </div>
+        
+        <div class="grid">
+            <!-- System Health Overview -->
+            <div class="card">
+                <div class="card-title">System Health Overview</div>
+                <div id="system-status" class="status-indicator status-healthy">System Healthy</div>
+                <div class="metric">
+                    <div class="metric-label">Uptime</div>
+                    <div class="metric-value" id="uptime">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Last Health Check</div>
+                    <div class="metric-value" id="last-check">--</div>
+                </div>
+                <button class="refresh-btn" onclick="refreshData()">Refresh Now</button>
+            </div>
+            
+            <!-- Error Summary -->
+            <div class="card">
+                <div class="card-title">Error Summary</div>
+                <div class="metric">
+                    <div class="metric-label">Total Errors (24h)</div>
+                    <div class="metric-value" id="total-errors">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Error Categories</div>
+                    <div id="error-categories">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Auto-fixes Applied</div>
+                    <div class="metric-value" id="auto-fixes">--</div>
+                </div>
+            </div>
+            
+            <!-- Component Status -->
+            <div class="card">
+                <div class="card-title">Component Status</div>
+                <div id="components-list">
+                    <div class="diagnostic-item diagnostic-pass">
+                        <strong>Database:</strong> <span id="db-status">Checking...</span>
+                    </div>
+                    <div class="diagnostic-item diagnostic-pass">
+                        <strong>Flask App:</strong> <span id="app-status">Checking...</span>
+                    </div>
+                    <div class="diagnostic-item diagnostic-pass">
+                        <strong>Workable API:</strong> <span id="api-status">Checking...</span>
+                    </div>
+                    <div class="diagnostic-item diagnostic-pass">
+                        <strong>Templates:</strong> <span id="template-status">Checking...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Errors -->
+            <div class="card">
+                <div class="card-title">Recent Errors</div>
+                <div id="recent-errors" class="error-list">
+                    <div class="error-item">
+                        <div>Loading error data...</div>
+                        <div class="error-time">Please wait...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Diagnostic Results -->
+            <div class="card">
+                <div class="card-title">Latest Diagnostics</div>
+                <div id="diagnostic-results">
+                    <div class="diagnostic-item">
+                        <strong>Status:</strong> <span id="diag-status">Running diagnostics...</span>
+                    </div>
+                    <div id="diag-components"></div>
+                </div>
+            </div>
+            
+            <!-- Recommendations -->
+            <div class="card">
+                <div class="card-title">System Recommendations</div>
+                <div id="recommendations">
+                    <div class="recommendation">
+                        Loading recommendations...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let countdown = 30;
+        
+        function updateCountdown() {
+            document.getElementById('countdown').textContent = countdown;
+            if (countdown <= 0) {
+                refreshData();
+                countdown = 30;
+            } else {
+                countdown--;
+            }
+        }
+        
+        function refreshData() {
+            // Reset countdown
+            countdown = 30;
+            
+            // Fetch health data
+            fetch('/health-detailed')
+                .then(response => response.json())
+                .then(data => {
+                    updateSystemHealth(data);
+                })
+                .catch(error => {
+                    console.error('Health check failed:', error);
+                    document.getElementById('system-status').className = 'status-indicator status-error';
+                    document.getElementById('system-status').textContent = 'Health Check Failed';
+                });
+            
+            // Fetch diagnostics
+            fetch('/diagnostics')
+                .then(response => response.json())
+                .then(data => {
+                    updateDiagnostics(data);
+                })
+                .catch(error => {
+                    console.error('Diagnostics failed:', error);
+                });
+            
+            // Fetch error data
+            fetch('/errors')
+                .then(response => response.json())
+                .then(data => {
+                    updateErrorData(data);
+                })
+                .catch(error => {
+                    console.error('Error data fetch failed:', error);
+                });
+        }
+        
+        function updateSystemHealth(data) {
+            const status = data.status || 'unknown';
+            const statusElement = document.getElementById('system-status');
+            
+            statusElement.className = 'status-indicator ' + 
+                (status === 'healthy' ? 'status-healthy' : 
+                 status === 'warning' ? 'status-warning' : 'status-error');
+            
+            statusElement.textContent = status === 'healthy' ? 'System Healthy' : 
+                                       status === 'warning' ? 'System Warning' : 'System Error';
+            
+            document.getElementById('last-check').textContent = 
+                new Date(data.timestamp).toLocaleTimeString();
+            
+            // Update component statuses
+            if (data.detailed_health && data.detailed_health.components) {
+                const components = data.detailed_health.components;
+                document.getElementById('db-status').textContent = components.database || 'Unknown';
+                document.getElementById('app-status').textContent = 'Running';
+                document.getElementById('template-status').textContent = components.filesystem || 'Unknown';
+                
+                if (components.memory) {
+                    document.getElementById('app-status').textContent += ` (Memory: ${components.memory})`;
+                }
+            }
+        }
+        
+        function updateDiagnostics(data) {
+            document.getElementById('diag-status').textContent = data.system_status || 'Unknown';
+            
+            const componentsDiv = document.getElementById('diag-components');
+            componentsDiv.innerHTML = '';
+            
+            if (data.components) {
+                for (const [component, result] of Object.entries(data.components)) {
+                    const div = document.createElement('div');
+                    div.className = 'diagnostic-item ' + 
+                        (result.status ? 'diagnostic-pass' : 'diagnostic-fail');
+                    div.innerHTML = `<strong>${component}:</strong> ${result.status ? 'Pass' : 'Fail'}`;
+                    if (result.details) {
+                        div.innerHTML += `<br><small>${result.details}</small>`;
+                    }
+                    componentsDiv.appendChild(div);
+                }
+            }
+            
+            // Update recommendations
+            const recDiv = document.getElementById('recommendations');
+            recDiv.innerHTML = '';
+            
+            if (data.recommendations && data.recommendations.length > 0) {
+                data.recommendations.forEach(rec => {
+                    const div = document.createElement('div');
+                    div.className = 'recommendation';
+                    div.textContent = rec;
+                    recDiv.appendChild(div);
+                });
+            } else {
+                recDiv.innerHTML = '<div class="recommendation">No recommendations at this time</div>';
+            }
+            
+            // Update auto-fixes
+            if (data.auto_fixes_applied) {
+                document.getElementById('auto-fixes').textContent = data.auto_fixes_applied.length;
+            }
+        }
+        
+        function updateErrorData(data) {
+            document.getElementById('total-errors').textContent = data.total_errors || 0;
+            
+            // Update error categories
+            const categoriesDiv = document.getElementById('error-categories');
+            if (data.categories && Object.keys(data.categories).length > 0) {
+                const categoryText = Object.entries(data.categories)
+                    .map(([cat, count]) => `${cat}: ${count}`)
+                    .join(', ');
+                categoriesDiv.textContent = categoryText;
+            } else {
+                categoriesDiv.textContent = 'No errors categorized';
+            }
+            
+            // Update recent errors
+            const errorsDiv = document.getElementById('recent-errors');
+            errorsDiv.innerHTML = '';
+            
+            if (data.recent_errors && data.recent_errors.length > 0) {
+                data.recent_errors.forEach(error => {
+                    const div = document.createElement('div');
+                    div.className = 'error-item';
+                    div.innerHTML = `
+                        <div>${error}</div>
+                        <div class="error-time">Recent</div>
+                    `;
+                    errorsDiv.appendChild(div);
+                });
+            } else {
+                errorsDiv.innerHTML = '<div class="error-item"><div>No recent errors</div></div>';
+            }
+        }
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+            setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+</html>
