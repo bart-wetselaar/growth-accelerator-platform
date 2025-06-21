@@ -1162,77 +1162,7 @@ def domain_check():
 def index():
     """Homepage route - Growth Accelerator landing page"""
     return render_template('staffing_app/landing.html')
-            return render_template('landing.html')
-        except Exception as e2:
-            logger.error(f"Fallback template error: {e2}")
-            # Final fallback with proper styling
-            return """
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Growth Accelerator Platform</title>
-                <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                    body { 
-                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white; min-height: 100vh; padding: 40px;
-                    }
-                    .container { max-width: 1200px; margin: 0 auto; text-align: center; }
-                    .logo { margin-bottom: 50px; }
-                    .logo h1 { font-size: 3rem; margin-bottom: 20px; }
-                    .logo p { font-size: 1.2rem; opacity: 0.9; }
-                    .nav { display: flex; justify-content: center; gap: 30px; margin: 40px 0; }
-                    .nav a { 
-                        background: rgba(255,255,255,0.1); padding: 15px 30px; 
-                        border-radius: 25px; color: white; text-decoration: none;
-                        border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;
-                    }
-                    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
-                    .features { margin-top: 60px; }
-                    .features h2 { margin-bottom: 30px; }
-                    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-                    .feature { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="logo">
-                        <h1>Growth Accelerator Platform</h1>
-                        <p>Advanced Staffing & Recruitment Management System</p>
-                        <p>With Self-Debugging Error Recovery</p>
-                    </div>
-                    <div class="nav">
-                        <a href="/dashboard">Dashboard</a>
-                        <a href="/consultants">Consultants</a>
-                        <a href="/jobs">Jobs</a>
-                        <a href="/matching">AI Matching</a>
-                        <a href="/reports">Reports</a>
-                    </div>
-                    <div class="features">
-                        <h2>Platform Features</h2>
-                        <div class="feature-grid">
-                            <div class="feature">
-                                <h3>Smart Recruitment</h3>
-                                <p>AI-powered candidate matching and workflow automation</p>
-                            </div>
-                            <div class="feature">
-                                <h3>Self-Debugging</h3>
-                                <p>Automated error detection and recovery system</p>
-                            </div>
-                            <div class="feature">
-                                <h3>Multi-Platform</h3>
-                                <p>Synchronized across Replit, GitHub, and Azure</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </body>
-            </html>
-            """
-    
+
 @app.route('/staffing')
 def staffing_home():
     """Staffing main route - redirects to the staffing dashboard"""
