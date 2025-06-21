@@ -1,0 +1,95 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+azure_startup.log
+
+# Database
+*.db
+*.sqlite3
+
+# Flask
+instance/
+.webassets-cache
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Replit specific
+.replit
+.replit.nix
+replit.nix
+.breakpoints
+
+# Azure specific
+.azure/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Attachments and assets (keep only essential ones)
+attached_assets/
+!attached_assets/GA_logo_*.png
+
+# Build artifacts
+*.tar.gz
+*.zip
+
+# OS specific
+.DS_Store
+Thumbs.db
