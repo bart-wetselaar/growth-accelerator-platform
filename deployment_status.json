@@ -1,0 +1,7 @@
+{
+  "deployment_ready": true,
+  "sync_completed": true,
+  "repository": "https://github.com/bart-wetselaar/growth-accelerator-platform",
+  "azure_workflow": "configured",
+  "self_debugging": "active"
+}
