@@ -1161,13 +1161,7 @@ def domain_check():
 @debug_errors
 def index():
     """Homepage route - Growth Accelerator landing page"""
-    try:
-        # Try to render the main landing page template
-        return render_template('staffing_app/landing.html')
-    except Exception as e:
-        logger.error(f"Landing template error: {e}")
-        try:
-            # Fallback to basic landing template
+    return render_template('staffing_app/landing.html')
             return render_template('landing.html')
         except Exception as e2:
             logger.error(f"Fallback template error: {e2}")
