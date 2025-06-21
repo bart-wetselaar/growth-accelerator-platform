@@ -1,0 +1,248 @@
+{% extends 'staffing_app/layout.html' %}
+
+{% block title %}24/7 Platform Monitoring{% endblock %}
+
+{% block content %}
+<div class="monitoring-dashboard">
+    <div class="dashboard-header">
+        <h1>24/7 Platform Monitoring</h1>
+        <div class="status-indicator" id="overall-status">
+            <span class="status-dot green"></span>
+            <span>All Systems Operational</span>
+        </div>
+    </div>
+    
+    <div class="monitoring-grid">
+        <div class="platform-status-card">
+            <h3>Replit Platform</h3>
+            <div class="status-details" id="replit-status">
+                <div class="status-row">
+                    <span>Status:</span>
+                    <span class="status active">Active</span>
+                </div>
+                <div class="status-row">
+                    <span>URL:</span>
+                    <span>eb44c92f-21f3-4aed-9cb2-28ca14f82460-00-296c0ebbkj4nd.riker.replit.dev</span>
+                </div>
+                <div class="status-row">
+                    <span>Keep-Alive:</span>
+                    <span class="status active">Every 5 minutes</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="platform-status-card">
+            <h3>Azure Web App</h3>
+            <div class="status-details" id="azure-status">
+                <div class="status-row">
+                    <span>Status:</span>
+                    <span class="status active">Active</span>
+                </div>
+                <div class="status-row">
+                    <span>URL:</span>
+                    <span>ga-hwaffmb0eqajfza5.azurewebsites.net</span>
+                </div>
+                <div class="status-row">
+                    <span>Keep-Alive:</span>
+                    <span class="status active">Every 4 minutes</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="platform-status-card">
+            <h3>GitHub Repository</h3>
+            <div class="status-details" id="github-status">
+                <div class="status-row">
+                    <span>Status:</span>
+                    <span class="status active">Synchronized</span>
+                </div>
+                <div class="status-row">
+                    <span>Repository:</span>
+                    <span>bart-wetselaar/growth-accelerator-platform</span>
+                </div>
+                <div class="status-row">
+                    <span>Sync Check:</span>
+                    <span class="status active">Every 10 minutes</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="platform-status-card">
+            <h3>Health Monitoring</h3>
+            <div class="status-details" id="health-status">
+                <div class="status-row">
+                    <span>Platform Monitor:</span>
+                    <span class="status active">Every 2 minutes</span>
+                </div>
+                <div class="status-row">
+                    <span>Auto Recovery:</span>
+                    <span class="status active">Enabled</span>
+                </div>
+                <div class="status-row">
+                    <span>Database:</span>
+                    <span class="status active">Connected</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="monitoring-logs">
+        <h3>Recent Monitoring Activity</h3>
+        <div class="log-container" id="monitoring-logs">
+            <div class="log-entry">
+                <span class="timestamp">{{ moment().format('HH:mm:ss') }}</span>
+                <span class="log-message">24/7 monitoring system initialized</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.monitoring-dashboard {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #001a44;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.status-dot.green { background-color: #10b981; }
+.status-dot.yellow { background-color: #f59e0b; }
+.status-dot.red { background-color: #ef4444; }
+
+.monitoring-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.platform-status-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.platform-status-card h3 {
+    color: #001a44;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 5px 0;
+}
+
+.status.active {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.status.degraded {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.status.error {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.monitoring-logs {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.log-container {
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.log-entry {
+    display: flex;
+    gap: 15px;
+    padding: 5px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.timestamp {
+    color: #6b7280;
+    font-weight: 600;
+}
+</style>
+
+<script>
+// Auto-refresh monitoring data
+async function refreshMonitoringData() {
+    try {
+        const response = await fetch('/api/platform-status');
+        const data = await response.json();
+        
+        // Update overall status
+        const overallStatus = document.getElementById('overall-status');
+        const statusDot = overallStatus.querySelector('.status-dot');
+        
+        if (data.overall_status === 'operational') {
+            statusDot.className = 'status-dot green';
+            overallStatus.querySelector('span:last-child').textContent = 'All Systems Operational';
+        } else {
+            statusDot.className = 'status-dot yellow';
+            overallStatus.querySelector('span:last-child').textContent = 'Some Issues Detected';
+        }
+        
+        // Add log entry
+        const logContainer = document.getElementById('monitoring-logs');
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.innerHTML = `
+            <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+            <span class="log-message">Platform status checked - ${data.overall_status}</span>
+        `;
+        logContainer.insertBefore(logEntry, logContainer.firstChild);
+        
+        // Keep only last 10 log entries
+        while (logContainer.children.length > 10) {
+            logContainer.removeChild(logContainer.lastChild);
+        }
+        
+    } catch (error) {
+        console.error('Failed to refresh monitoring data:', error);
+    }
+}
+
+// Refresh every 30 seconds
+setInterval(refreshMonitoringData, 30000);
+
+// Initial load
+refreshMonitoringData();
+</script>
+{% endblock %}
