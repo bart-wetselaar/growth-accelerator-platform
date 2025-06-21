@@ -1564,15 +1564,15 @@ def candidates():
             logger.warning("Workable API not initialized, using get_workable_candidates()")
             candidates = get_workable_candidates()
         
-        # Process the candidates to match the consultant model
-        consultants_list = []
+        # Process the candidates data
+        candidates_list = []
         for candidate in candidates:
             # Extract skills from candidate details or use empty list if not available
             skills = candidate.get('skills', [])
             if isinstance(skills, str):
                 skills = [skill.strip() for skill in skills.split(',')]
                 
-            consultant = {
+            candidate_data = {
                 'id': candidate.get('id', ''),
                 'first_name': candidate.get('first_name', ''),
                 'last_name': candidate.get('last_name', ''),
@@ -1584,27 +1584,27 @@ def candidates():
                 'created_at': candidate.get('created_at', ''),
                 'applications': candidate.get('total_applications', 0)
             }
-            consultants_list.append(consultant)
+            candidates_list.append(candidate_data)
         
         # Group candidates by status for the template
         candidates_by_status = {
             'new': [],
             'active': [],
-            'all': consultants_list
+            'all': candidates_list
         }
         
-        for consultant in consultants_list:
-            status = consultant.get('status', 'active')
+        for candidate in candidates_list:
+            status = candidate.get('status', 'active')
             if status == 'new':
-                candidates_by_status['new'].append(consultant)
+                candidates_by_status['new'].append(candidate)
             else:
-                candidates_by_status['active'].append(consultant)
+                candidates_by_status['active'].append(candidate)
         
         # Calculate pagination
-        total = len(consultants_list)
+        total = len(candidates_list)
         start = (page - 1) * per_page
         end = start + per_page
-        consultants_page = consultants_list[start:end]
+        candidates_page = candidates_list[start:end]
         
         # Create pagination info
         pagination = {
@@ -1619,8 +1619,8 @@ def candidates():
         }
             
         return render_template('staffing_app/candidates.html', 
-                             consultants=consultants_page, 
-                             candidates=consultants_list,
+                             consultants=candidates_page, 
+                             candidates=candidates_list,
                              candidates_by_status=candidates_by_status,
                              pagination=pagination)
     except Exception as e:
@@ -1823,7 +1823,7 @@ def matching():
             if isinstance(skills, str):
                 skills = [skill.strip() for skill in skills.split(',')]
                 
-            consultant = {
+            candidate_data = {
                 'id': candidate.get('id', ''),
                 'first_name': candidate.get('first_name', ''),
                 'last_name': candidate.get('last_name', ''),
@@ -1835,7 +1835,7 @@ def matching():
                 'created_at': candidate.get('created_at', ''),
                 'applications': candidate.get('total_applications', 0)
             }
-            consultants_list.append(consultant)
+            candidates_list.append(candidate_data)
         
         # Generate matches (in a real app, this would use a sophisticated matching algorithm)
         matches = []
