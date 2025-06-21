@@ -23,11 +23,214 @@ from flask_login import current_user
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# Import error handling and diagnostics
+from error_handler import debug_errors, error_handler
+from self_diagnostic import diagnostic_system
+from auto_recovery import auto_recovery
+
 # Import app and database from main app module
 from app import app, db
 from models import User, Client, Consultant, Job, Application, Placement, Skill, JobSkill
 
-# Health check endpoint - ensuring no conflicts
+# Enhanced health check endpoint with self-diagnostics
+@app.route('/health-detailed')
+@debug_errors
+def health_check_detailed():
+    """Enhanced health check endpoint with self-diagnostics"""
+    try:
+        # Run comprehensive health check
+        health_report = error_handler.health_check()
+        
+        # Test database connection
+        from sqlalchemy import text
+        db.session.execute(text('SELECT 1'))
+        db_status = "connected"
+    except Exception as e:
+        logger.error(f"Database health check failed: {e}")
+        db_status = f"error: {str(e)}"
+        health_report = {"overall_status": "unhealthy", "components": {"database": db_status}}
+    
+    return jsonify({
+        "status": health_report.get("overall_status", "healthy"),
+        "timestamp": datetime.now().isoformat(),
+        "database": db_status,
+        "service": "Growth Accelerator Platform",
+        "detailed_health": health_report,
+        "error_summary": error_handler.get_error_summary()
+    })
+
+# Self-diagnostic endpoint
+@app.route('/diagnostics')
+@debug_errors
+def system_diagnostics():
+    """Comprehensive system diagnostics endpoint"""
+    try:
+        diagnostics_report = diagnostic_system.run_comprehensive_diagnostics()
+        return jsonify(diagnostics_report)
+    except Exception as e:
+        logger.error(f"Diagnostics failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
+
+# Error monitoring endpoint
+@app.route('/errors')
+@debug_errors
+def error_monitoring():
+    """Error monitoring and analysis endpoint"""
+    try:
+        error_summary = error_handler.get_error_summary()
+        return jsonify(error_summary)
+    except Exception as e:
+        logger.error(f"Error monitoring failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
+
+# Error dashboard route (separate from main landing page)
+@app.route('/admin/error-dashboard')
+@debug_errors
+def error_dashboard():
+    """Error monitoring dashboard (admin only)"""
+    return render_template('error_dashboard.html')
+
+@app.route('/admin/sync-dashboard')
+@debug_errors
+def sync_dashboard():
+    """Platform synchronization dashboard"""
+    return render_template('admin/sync_dashboard.html')
+
+@app.route('/admin/deploy-sync', methods=['POST'])
+@debug_errors
+def admin_deploy_sync():
+    """Trigger unified deployment synchronization"""
+    try:
+        from deploy_sync import deployment_manager
+        result = deployment_manager.execute_full_sync()
+        return jsonify({
+            "status": "success",
+            "deployment_result": result,
+            "timestamp": datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Deployment sync failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
+
+@app.route('/admin/platform-health')
+@debug_errors
+def platform_health():
+    """Get health status across all platforms"""
+    try:
+        from deploy_sync import deployment_manager
+        health_status = deployment_manager.verify_platform_health()
+        return jsonify({
+            "platforms": health_status,
+            "timestamp": datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Platform health check failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
+
+# Auto-recovery status endpoint
+@app.route('/admin/recovery-status')
+@debug_errors
+def recovery_status():
+    """Get auto-recovery system status"""
+    try:
+        status = auto_recovery.get_recovery_status()
+        return jsonify(status)
+    except Exception as e:
+        logger.error(f"Recovery status check failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
+
+# Manual recovery trigger endpoint
+@app.route('/admin/trigger-recovery', methods=['POST'])
+@debug_errors
+def trigger_recovery():
+    """Manually trigger system recovery"""
+    try:
+        fixes = auto_recovery._initiate_recovery()
+        return jsonify({
+            "status": "success",
+            "fixes_applied": fixes,
+            "timestamp": datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Manual recovery trigger failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
+
+# GitHub synchronization endpoints
+@app.route('/admin/sync-github', methods=['POST'])
+@debug_errors
+def sync_github():
+    """Trigger GitHub synchronization"""
+    try:
+        from github_sync import sync_platforms
+        result = sync_platforms()
+        return jsonify({
+            "status": "success",
+            "sync_result": result,
+            "timestamp": datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"GitHub sync failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
+
+@app.route('/admin/deployment-status')
+@debug_errors
+def deployment_status():
+    """Get unified deployment status across all platforms"""
+    try:
+        # Get diagnostics
+        diagnostics = diagnostic_system.run_comprehensive_diagnostics()
+        
+        # Get error summary
+        errors = error_handler.get_error_summary()
+        
+        # Get recovery status
+        recovery = auto_recovery.get_recovery_status()
+        
+        return jsonify({
+            "platform": "unified",
+            "replit_status": diagnostics['system_status'],
+            "github_ready": diagnostics['system_status'] != 'critical',
+            "azure_ready": diagnostics['system_status'] != 'critical',
+            "diagnostics": diagnostics,
+            "errors": errors,
+            "recovery": recovery,
+            "timestamp": datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Deployment status check failed: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }), 500
 
 # Initialize Azure health check routes
 try:
@@ -155,6 +358,7 @@ def auto_session():
 # Exempt the API endpoint from CSRF protection
 @app.route('/api/workable/create-match', methods=['POST'])
 @csrf.exempt
+@debug_errors
 def create_workable_match():
     """Create a match between candidate and job in Workable"""
     try:
@@ -385,6 +589,13 @@ app.config["WORKABLE_SUBDOMAIN"] = os.environ.get("WORKABLE_SUBDOMAIN", "growtha
 
 # Database is already initialized in app.py
 logger.info("Database initialized successfully via app.py")
+
+# Start auto-recovery monitoring system
+try:
+    auto_recovery.start_monitoring()
+    logger.info("Auto-recovery system initialized and monitoring started")
+except Exception as e:
+    logger.error(f"Failed to start auto-recovery system: {e}")
 
 # Initialize services
 from services import init_services
@@ -849,6 +1060,36 @@ def health_check():
         'timestamp': datetime.now().isoformat()
     })
 
+# Consultant Routes
+@app.route('/consultant/<int:consultant_id>')
+def consultant_detail(consultant_id):
+    """Consultant detail page"""
+    try:
+        # Get consultant from database or generate sample data if not in database
+        try:
+            consultant = Consultant.query.get_or_404(consultant_id)
+        except:
+            # Generate sample consultant data for demonstration
+            consultant = type('Consultant', (), {
+                'id': consultant_id,
+                'first_name': 'John',
+                'last_name': 'Doe',
+                'email': 'john.doe@example.com',
+                'phone': '+1-555-0123',
+                'status': 'Available',
+                'hourly_rate': 85.0,
+                'linkedin_url': 'https://linkedin.com/in/johndoe',
+                'resume_url': None,
+                'applications': [],
+                'placements': []
+            })()
+        
+        return render_template('staffing_app/consultant_detail.html', consultant=consultant)
+    except Exception as e:
+        logger.error(f"Error loading consultant detail: {str(e)}")
+        flash('Error loading consultant details', 'error')
+        return redirect(url_for('candidates'))
+
 # API Routes
 @app.route('/api/consultants')
 def api_consultants():
@@ -904,6 +1145,7 @@ def enforce_custom_domain():
 
 # Domain verification endpoint
 @app.route('/domain-check')
+@debug_errors
 def domain_check():
     """Verify custom domain configuration"""
     return jsonify({
@@ -916,39 +1158,86 @@ def domain_check():
 
 # Main website routes
 @app.route('/')
+@debug_errors
 def index():
     """Homepage route - Growth Accelerator landing page"""
     try:
+        # Try to render the main landing page template
         return render_template('staffing_app/landing.html')
     except Exception as e:
         logger.error(f"Landing template error: {e}")
-        # Simple fallback if template fails
-        return """
-        <html>
-        <head>
-            <title>Growth Accelerator Platform</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 40px; }
-                .logo { text-align: center; margin-bottom: 30px; }
-                .nav { text-align: center; margin: 20px 0; }
-                .nav a { margin: 0 15px; color: #007bff; text-decoration: none; }
-            </style>
-        </head>
-        <body>
-            <div class="logo">
-                <h1>Growth Accelerator Platform</h1>
-                <p>Staffing & Recruitment Management System</p>
-            </div>
-            <div class="nav">
-                <a href="/dashboard">Dashboard</a>
-                <a href="/consultants">Consultants</a>
-                <a href="/jobs">Jobs</a>
-                <a href="/matching">Matching</a>
-                <a href="/reports">Reports</a>
-            </div>
-        </body>
-        </html>
-        """
+        try:
+            # Fallback to basic landing template
+            return render_template('landing.html')
+        except Exception as e2:
+            logger.error(f"Fallback template error: {e2}")
+            # Final fallback with proper styling
+            return """
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Growth Accelerator Platform</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white; min-height: 100vh; padding: 40px;
+                    }
+                    .container { max-width: 1200px; margin: 0 auto; text-align: center; }
+                    .logo { margin-bottom: 50px; }
+                    .logo h1 { font-size: 3rem; margin-bottom: 20px; }
+                    .logo p { font-size: 1.2rem; opacity: 0.9; }
+                    .nav { display: flex; justify-content: center; gap: 30px; margin: 40px 0; }
+                    .nav a { 
+                        background: rgba(255,255,255,0.1); padding: 15px 30px; 
+                        border-radius: 25px; color: white; text-decoration: none;
+                        border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;
+                    }
+                    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+                    .features { margin-top: 60px; }
+                    .features h2 { margin-bottom: 30px; }
+                    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+                    .feature { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="logo">
+                        <h1>Growth Accelerator Platform</h1>
+                        <p>Advanced Staffing & Recruitment Management System</p>
+                        <p>With Self-Debugging Error Recovery</p>
+                    </div>
+                    <div class="nav">
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/consultants">Consultants</a>
+                        <a href="/jobs">Jobs</a>
+                        <a href="/matching">AI Matching</a>
+                        <a href="/reports">Reports</a>
+                    </div>
+                    <div class="features">
+                        <h2>Platform Features</h2>
+                        <div class="feature-grid">
+                            <div class="feature">
+                                <h3>Smart Recruitment</h3>
+                                <p>AI-powered candidate matching and workflow automation</p>
+                            </div>
+                            <div class="feature">
+                                <h3>Self-Debugging</h3>
+                                <p>Automated error detection and recovery system</p>
+                            </div>
+                            <div class="feature">
+                                <h3>Multi-Platform</h3>
+                                <p>Synchronized across Replit, GitHub, and Azure</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
     
 @app.route('/staffing')
 def staffing_home():
@@ -957,6 +1246,7 @@ def staffing_home():
 
 @app.route('/dashboard')
 @app.route('/staffing/dashboard')
+@debug_errors
 def dashboard():
     """Dashboard route"""
     try:
@@ -1502,6 +1792,7 @@ def client_detail(client_id):
 
 @app.route('/matching')
 @app.route('/staffing/matching')
+@debug_errors
 def matching():
     """Matching dashboard route"""
     try:
@@ -1712,6 +2003,7 @@ def application_detail(application_id):
 
 @app.route('/onboarding')
 @app.route('/staffing/onboarding')
+@debug_errors
 def onboarding():
     """Onboarding management route"""
     try:
@@ -2831,10 +3123,14 @@ def force_unified_sync():
         return jsonify({'error': 'Unified sync failed'}), 500
 
 
-# Production domain configuration
-if os.environ.get('REPLIT_DEPLOYMENT'):
+# Production domain configuration - only set SERVER_NAME in Azure production
+is_azure_production = "WEBSITE_HOSTNAME" in os.environ
+if is_azure_production:
     app.config['SERVER_NAME'] = 'app.growthaccelerator.nl'
     app.config['PREFERRED_URL_SCHEME'] = 'https'
+    logger.info("Production domain configuration applied: app.growthaccelerator.nl")
+else:
+    logger.info("Development environment detected - using default server configuration")
 
 if __name__ == '__main__':
     # 24/7 sync monitoring is configured via unified endpoints
