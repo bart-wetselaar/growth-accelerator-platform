@@ -191,9 +191,11 @@
         text-align: center;
         padding: 2rem;
         min-height: 100vh;
-        width: calc(100vw - 280px); /* Account for sidebar width */
-        margin-left: 280px; /* Push content past sidebar */
-        transform: translateX(-80px); /* Move slightly to the right */
+        width: 100vw; /* Full viewport width */
+        margin-left: 0; /* Reset margin */
+        transform: translateX(140px); /* Center within full viewport including sidebar */
+        box-sizing: border-box;
+        background: linear-gradient(135deg, var(--ga-primary) 0%, var(--ga-secondary) 100%);
     }
     
     .logo-container {
