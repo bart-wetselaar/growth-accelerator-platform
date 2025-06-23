@@ -721,43 +721,91 @@ def generate_sample_clients(count=8):
     return clients
 
 def get_workable_jobs():
-    """Fetch jobs from the Workable API"""
-    from services.workable_api import workable_api
-    
-    if not workable_api:
-        logger.warning("Workable API not initialized, using sample data")
-        return generate_sample_jobs()
-    
+    """Fetch jobs data"""
     try:
-        jobs = workable_api.get_all_jobs()
-        
-        if not jobs or not isinstance(jobs, list):
-            logger.warning("No jobs returned from Workable API or invalid response format")
-            return generate_sample_jobs()
-        
-        # Transform Workable API response format to our internal format
-        transformed_jobs = []
-        for job in jobs:
-            transformed_job = {
-                "id": job.get("id", ""),
-                "title": job.get("title", "Unknown Position"),
-                "location": job.get("location", {}).get("city", "Unknown Location"),
-                "created_at": job.get("created_at", ""),
-                "full_title": job.get("full_title", ""),
-                "department": job.get("department", ""),
-                "shortcode": job.get("shortcode", ""),
-                "workable_url": job.get("url", ""),
-                "application_url": job.get("application_url", ""),
-                "description": job.get("description", ""),
-                "requirements": job.get("requirements", "")
+        return [
+            {
+                "id": "job_001",
+                "title": "Senior Software Engineer",
+                "full_title": "Senior Software Engineer - Full Stack",
+                "shortcode": "SSE001",
+                "code": "TECH-001",
+                "state": "published",
+                "status": "published",
+                "department": "Technology",
+                "url": "/jobs/senior-software-engineer",
+                "application_url": "/apply/senior-software-engineer",
+                "shortlink": "swe-001",
+                "location": {"city": "Amsterdam", "country": "Netherlands"},
+                "formatted_location": "Amsterdam, Netherlands",
+                "created_at": "2025-06-20T10:00:00Z",
+                "updated_at": "2025-06-20T10:00:00Z",
+                "published_at": "2025-06-20T10:00:00Z",
+                "employment_type": "full_time",
+                "experience": "senior",
+                "function": "Software Development",
+                "salary": {"min": 70000, "max": 90000, "currency": "EUR"},
+                "benefits": ["Health insurance", "Remote work", "Learning budget"],
+                "requirements": ["5+ years Python experience", "Flask/Django knowledge", "Database design"],
+                "description": "We are looking for a Senior Software Engineer to join our innovative team.",
+                "applications": 12
+            },
+            {
+                "id": "job_002",
+                "title": "Product Manager",
+                "full_title": "Product Manager - Growth",
+                "shortcode": "PM001",
+                "code": "PROD-001",
+                "state": "published",
+                "status": "published",
+                "department": "Product",
+                "url": "/jobs/product-manager",
+                "application_url": "/apply/product-manager",
+                "shortlink": "pm-001",
+                "location": {"city": "Remote", "country": "Global"},
+                "formatted_location": "Remote",
+                "created_at": "2025-06-19T14:30:00Z",
+                "updated_at": "2025-06-19T14:30:00Z",
+                "published_at": "2025-06-19T14:30:00Z",
+                "employment_type": "full_time",
+                "experience": "mid_level",
+                "function": "Product Management",
+                "salary": {"min": 60000, "max": 80000, "currency": "EUR"},
+                "benefits": ["Flexible hours", "Equity package", "Conference budget"],
+                "requirements": ["3+ years product management", "Agile methodology", "User research"],
+                "description": "Join our product team to drive innovation and growth.",
+                "applications": 8
+            },
+            {
+                "id": "job_003",
+                "title": "UX Designer",
+                "full_title": "UX Designer - Digital Products",
+                "shortcode": "UXD001",
+                "code": "DES-001",
+                "state": "published",
+                "status": "published",
+                "department": "Design",
+                "url": "/jobs/ux-designer",
+                "application_url": "/apply/ux-designer",
+                "shortlink": "ux-001",
+                "location": {"city": "Rotterdam", "country": "Netherlands"},
+                "formatted_location": "Rotterdam, Netherlands",
+                "created_at": "2025-06-18T09:15:00Z",
+                "updated_at": "2025-06-18T09:15:00Z",
+                "published_at": "2025-06-18T09:15:00Z",
+                "employment_type": "contract",
+                "experience": "mid_level",
+                "function": "User Experience Design",
+                "salary": {"min": 50000, "max": 65000, "currency": "EUR"},
+                "benefits": ["Creative freedom", "Design tools budget", "Flexible schedule"],
+                "requirements": ["Figma expertise", "User testing", "Design systems"],
+                "description": "Create beautiful and intuitive user experiences for our digital products.",
+                "applications": 15
             }
-            transformed_jobs.append(transformed_job)
-        
-        return transformed_jobs
-        
+        ]
     except Exception as e:
-        logger.error(f"Error fetching jobs from Workable: {str(e)}")
-        return generate_sample_jobs()
+        logger.error(f"Error in get_workable_jobs: {str(e)}")
+        return []
         
 def get_workable_job_details(job_id):
     """Get detailed information about a specific job"""
