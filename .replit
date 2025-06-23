@@ -1,0 +1,94 @@
+modules = ["python-3.11", "python3", "postgresql-16", "nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["cacert", "cargo", "fontconfig", "freefont_ttf", "ghostscript", "glib", "harfbuzz", "libiconv", "libsodium", "libxcrypt", "openssl", "pango", "pkg-config", "rustc", "xcodebuild", "xdg-utils", "zlib"]
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["sh", "-c", "gunicorn --bind 0.0.0.0:5000 main:app"]
+
+[workflows]
+runButton = "Start application"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Run Flask App"
+author = 41544537
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pkill gunicorn || true"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+
+[[workflows.workflow]]
+name = "Preview Dashboard"
+author = 41544537
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pkill gunicorn || true"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+
+[[ports]]
+localPort = 3000
+externalPort = 3002
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5002
+externalPort = 4200
+
+[[ports]]
+localPort = 7000
+externalPort = 3000
+
+[[ports]]
+localPort = 8000
+externalPort = 8000
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
+
+[[ports]]
+localPort = 8765
+externalPort = 3003
+
+[[ports]]
+localPort = 9876
+externalPort = 3001
