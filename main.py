@@ -20,40 +20,45 @@ app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 
 @app.route('/')
 def home():
-    """Homepage showing real Workable data summary"""
+    """Homepage with Enter Workspace landing page"""
     try:
-        # Get real data from Workable API
-        jobs = get_workable_jobs_real()
-        candidates = get_workable_candidates_real()
-        
-        return jsonify({
-            'status': 'success',
-            'platform': 'Growth Accelerator Platform',
-            'data_source': 'Real Workable API',
-            'workable_account': 'growthacceleratorstaffing.workable.com',
-            'stats': {
-                'jobs_count': len(jobs),
-                'candidates_count': len(candidates)
-            },
-            'api_endpoints': {
-                'jobs': '/api/jobs',
-                'candidates': '/api/candidates',
-                'health': '/health'
-            },
-            'sample_data': {
-                'first_job': jobs[0].get('title') if jobs else 'No jobs available',
-                'first_candidate': candidates[0].get('name') if candidates else 'No candidates available'
-            },
-            'timestamp': datetime.now().isoformat()
-        })
+        from flask import render_template
+        return render_template('staffing_app/landing.html')
     except Exception as e:
-        logger.error(f"Error in home route: {str(e)}")
-        return jsonify({
-            'status': 'error',
-            'platform': 'Growth Accelerator Platform',
-            'error': str(e),
-            'timestamp': datetime.now().isoformat()
-        }), 500
+        logger.error(f"Error loading landing page: {str(e)}")
+        # Fallback to simple HTML if template not found
+        return '''
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Growth Accelerator Platform</title>
+            <style>
+                body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                       color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                .container { text-align: center; padding: 2rem; background: rgba(255,255,255,0.1); 
+                            border-radius: 15px; backdrop-filter: blur(10px); }
+                h1 { font-size: 3rem; margin-bottom: 1rem; }
+                p { font-size: 1.2rem; margin-bottom: 2rem; }
+                .btn { background: #4CAF50; color: white; padding: 15px 30px; font-size: 1.2rem; 
+                       border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; }
+                .btn:hover { background: #45a049; }
+                .stats { margin-top: 2rem; font-size: 0.9rem; opacity: 0.8; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Growth Accelerator Platform</h1>
+                <p>Staffing & Recruitment Management</p>
+                <a href="/workspace" class="btn">Enter Workspace</a>
+                <div class="stats">
+                    <p>Connected to Workable API • Real recruitment data</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        '''
 
 @app.route('/api/jobs')
 def api_jobs():
@@ -91,6 +96,43 @@ def api_candidates():
         logger.error(f"Error in candidates API: {str(e)}")
         return jsonify({
             'success': False,
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+@app.route('/workspace')
+def workspace():
+    """Workspace dashboard with real Workable data"""
+    try:
+        # Get real data from Workable API
+        jobs = get_workable_jobs_real()
+        candidates = get_workable_candidates_real()
+        
+        return jsonify({
+            'status': 'success',
+            'platform': 'Growth Accelerator Platform',
+            'data_source': 'Real Workable API',
+            'workable_account': 'growthacceleratorstaffing.workable.com',
+            'stats': {
+                'jobs_count': len(jobs),
+                'candidates_count': len(candidates)
+            },
+            'api_endpoints': {
+                'jobs': '/api/jobs',
+                'candidates': '/api/candidates',
+                'health': '/health'
+            },
+            'sample_data': {
+                'first_job': jobs[0].get('title') if jobs else 'No jobs available',
+                'first_candidate': candidates[0].get('name') if candidates else 'No candidates available'
+            },
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in workspace route: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'platform': 'Growth Accelerator Platform',
             'error': str(e),
             'timestamp': datetime.now().isoformat()
         }), 500
