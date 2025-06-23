@@ -38,6 +38,9 @@
         .main-content {
             margin-left: 0 !important;
             padding: 1rem !important;
+            min-height: calc(100vh - 120px) !important;
+            width: 100% !important;
+            transform: none !important;
         }
         
         .top-header {
@@ -54,6 +57,24 @@
         
         .app-container {
             flex-direction: column !important;
+        }
+        
+        .platform-name {
+            font-size: 2.2rem !important;
+        }
+        
+        .platform-description {
+            font-size: 1.2rem !important;
+            margin-bottom: 2rem !important;
+        }
+        
+        .logo-container {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .enter-button {
+            padding: 0.9rem 2rem !important;
+            font-size: 1.1rem !important;
         }
     }
     
@@ -93,7 +114,7 @@
     }
     
     .top-header {
-        background-color: #00215e;
+        background-color: #031e42;
         padding: 1.5rem;
         display: flex;
         justify-content: space-between;
@@ -169,45 +190,75 @@
         justify-content: center;
         text-align: center;
         padding: 2rem;
+        min-height: 100vh;
+        width: calc(100vw - 280px); /* Account for sidebar width */
+        margin-left: 280px; /* Push content past sidebar */
+        transform: translateX(-80px); /* Move slightly to the right */
     }
     
     .logo-container {
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
     
     .logo-container img {
         width: 120px;
+        height: auto;
     }
     
     .platform-name {
-        font-size: 2.5rem;
+        font-size: 3rem;
         font-weight: 600;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        color: white;
+        text-align: center;
+        width: 100%;
+        display: block;
     }
     
     .platform-description {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 2rem;
+        font-size: 1.4rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 3rem;
+        text-align: center;
+        font-weight: 300;
+        letter-spacing: 0.5px;
     }
     
     .enter-button {
         background-color: var(--ga-accent);
         color: white;
         border: none;
-        padding: 0.8rem 2rem;
-        font-size: 1.2rem;
+        padding: 1rem 2.5rem;
+        font-size: 1.3rem;
+        font-weight: 500;
         border-radius: 50px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        margin-top: 1rem;
     }
     
     .enter-button:hover {
         background-color: #ff7d7d;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        text-decoration: none;
+        color: white;
+    }
+    
+    .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1rem;
     }
     
     .workspace-button {
@@ -230,26 +281,13 @@
         color: white;
         font-size: 4rem;
         margin-bottom: 1rem;
+        text-align: center;
+        width: 100%;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-{% if not embedded %}
-<div class="top-header">
-    <h1 class="wavebox-title">Growth Accelerator</h1>
-    <a href="{{ url_for('dashboard') }}" class="workspace-button">Open Workspace</a>
-</div>
-
-<div class="platform-header">
-    <h2 class="platform-title">Growth Accelerator Staffing Platform</h2>
-</div>
-{% else %}
-<!-- Simplified header for embedded mode -->
-<div class="platform-header">
-    <h2 class="platform-title">Growth Accelerator Staffing Platform</h2>
-</div>
-{% endif %}
 
 <div class="main-content">
         <div class="logo-container">
@@ -259,11 +297,13 @@
         </div>
         
         <h1 class="platform-name">Growth Accelerator Staffing Platform</h1>
-        <p class="platform-description">Match. Onboard. Hire.</p>
+        <p class="platform-description">Attract. Match. Hire. Onboard.</p>
         
-        <a href="{{ url_for('dashboard') }}" class="enter-button">
-            <i class="bi bi-speedometer2 me-2"></i> Enter Workspace
-        </a>
+        <div class="button-container">
+            <a href="{{ url_for('dashboard') }}" class="enter-button">
+                <i class="bi bi-speedometer2 me-2"></i> Enter Workspace
+            </a>
+        </div>
         
         <!-- Login with LinkedIn button removed as requested -->
         
