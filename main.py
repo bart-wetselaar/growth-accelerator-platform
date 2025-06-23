@@ -1,123 +1,110 @@
+#!/usr/bin/env python3
 """
-Growth Accelerator Platform - Azure Production Entry Point
+Growth Accelerator Platform - Main Application
+Real Workable API Integration
 """
 
 import os
 import logging
 from datetime import datetime
-from flask import jsonify
-from app import app, db
-from sqlalchemy import text
+from flask import Flask, jsonify
+from services.workable_api import get_workable_jobs_real, get_workable_candidates_real
 
-# Configure logging for Azure
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Azure environment detection
-is_azure = "WEBSITE_HOSTNAME" in os.environ
-logger.info(f"Running on {'Azure Web App' if is_azure else 'development environment'}")
+# Create Flask app
+app = Flask(__name__)
+app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 
-# Import application components with error handling
-try:
-    import models
-    logger.info("Models imported successfully")
-except ImportError as e:
-    logger.warning(f"Models import: {e}")
-except Exception as e:
-    logger.error(f"Models import error: {e}")
-
-try:
-    import staffing_app
-    logger.info("Staffing app imported successfully")
-    
-    # Routes are now properly registered in staffing_app.py
-    
-    with app.app_context():
-        logger.info(f"Total routes registered: {len(list(app.url_map.iter_rules()))}")
-    
-    # Initialize self-debugging system for Azure
-    if is_azure:
-        try:
-            from error_handler import error_handler
-            from auto_recovery import auto_recovery
-            auto_recovery.start_monitoring()
-            logger.info("Self-debugging system initialized for Azure")
-        except Exception as debug_error:
-            logger.warning(f"Self-debugging initialization failed: {debug_error}")
-            
-except ImportError as e:
-    logger.warning(f"Staffing app import: {e}")
-except Exception as e:
-    logger.error(f"Unexpected import error: {e}")
-
-# Register error monitoring routes
-@app.route('/health')
-def health():
-    """Basic health check endpoint"""
+@app.route('/')
+def home():
+    """Homepage showing real Workable data summary"""
     try:
-        # Test database connection if available
-        db_status = "not_configured"
-        if database_url:
-            try:
-                from sqlalchemy import text
-                db.session.execute(text('SELECT 1'))
-                db_status = "connected"
-            except:
-                db_status = "error"
+        # Get real data from Workable API
+        jobs = get_workable_jobs_real()
+        candidates = get_workable_candidates_real()
         
         return jsonify({
-            "status": "healthy",
-            "service": "Growth Accelerator Platform",
-            "environment": "Azure" if is_azure else "Development",
-            "database": db_status,
-            "timestamp": datetime.now().isoformat()
+            'status': 'success',
+            'platform': 'Growth Accelerator Platform',
+            'data_source': 'Real Workable API',
+            'workable_account': 'growthacceleratorstaffing.workable.com',
+            'stats': {
+                'jobs_count': len(jobs),
+                'candidates_count': len(candidates)
+            },
+            'api_endpoints': {
+                'jobs': '/api/jobs',
+                'candidates': '/api/candidates',
+                'health': '/health'
+            },
+            'sample_data': {
+                'first_job': jobs[0].get('title') if jobs else 'No jobs available',
+                'first_candidate': candidates[0].get('name') if candidates else 'No candidates available'
+            },
+            'timestamp': datetime.now().isoformat()
         })
     except Exception as e:
+        logger.error(f"Error in home route: {str(e)}")
         return jsonify({
-            "status": "error",
-            "service": "Growth Accelerator Platform",
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
+            'status': 'error',
+            'platform': 'Growth Accelerator Platform',
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
         }), 500
 
-@app.route('/azure-status')
-def azure_status():
-    """Azure-specific status endpoint"""
+@app.route('/api/jobs')
+def api_jobs():
+    """Jobs API endpoint with real Workable data"""
+    try:
+        jobs = get_workable_jobs_real()
+        return jsonify({
+            'success': True,
+            'jobs': jobs,
+            'count': len(jobs),
+            'source': 'workable_api',
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in jobs API: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+@app.route('/api/candidates')
+def api_candidates():
+    """Candidates API endpoint with real Workable data"""
+    try:
+        candidates = get_workable_candidates_real()
+        return jsonify({
+            'success': True,
+            'candidates': candidates,
+            'count': len(candidates),
+            'source': 'workable_api',
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in candidates API: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+@app.route('/health')
+def health():
+    """Health check endpoint"""
     return jsonify({
-        "platform": "Azure Web App",
-        "hostname": os.environ.get('WEBSITE_HOSTNAME', 'unknown'),
-        "instance_id": os.environ.get('WEBSITE_INSTANCE_ID', 'unknown'),
-        "resource_group": os.environ.get('WEBSITE_RESOURCE_GROUP', 'unknown'),
-        "site_name": os.environ.get('WEBSITE_SITE_NAME', 'unknown'),
-        "timestamp": datetime.now().isoformat()
+        'status': 'healthy',
+        'platform': 'Growth Accelerator Platform',
+        'workable_connection': 'active',
+        'timestamp': datetime.now().isoformat()
     })
 
-# Initialize database with Azure-specific handling
-database_url = os.environ.get("DATABASE_URL")
-with app.app_context():
-    try:
-        if database_url:
-            db.create_all()
-            logger.info("Database tables initialized")
-        else:
-            logger.warning("No database URL configured")
-    except Exception as e:
-        logger.warning(f"Database initialization: {e}")
-        logger.info("Application will continue without database")
-
-# Azure production configuration
-if is_azure:
-    app.config['ENV'] = 'production'
-    app.config['DEBUG'] = False
-    app.config['PREFERRED_URL_SCHEME'] = 'https'
-
-# Ensure WSGI compatibility for Azure
-application = app
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    logger.info(f"Starting Growth Accelerator Platform on port {port}")
-    app.run(host="0.0.0.0", port=port, debug=False)
+if __name__ == '__main__':
+    logger.info("Starting Growth Accelerator Platform with real Workable data")
+    app.run(host='0.0.0.0', port=5000, debug=True)
