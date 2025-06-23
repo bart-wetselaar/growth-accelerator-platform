@@ -65,6 +65,8 @@ class WorkableAPI:
             jobs = response['jobs']
             logger.info(f"Retrieved {len(jobs)} jobs from Workable API")
             return jobs
+        elif response:
+            logger.warning(f"Unexpected jobs response format: {response}")
         return []
     
     def get_candidates(self, stage: str = None, limit: int = 100) -> List[Dict]:
@@ -128,41 +130,43 @@ def get_workable_jobs_real() -> List[Dict]:
         
         # Process published jobs
         for job in published_jobs:
-            formatted_job = {
-                'id': job.get('id'),
-                'title': job.get('title'),
-                'full_title': job.get('full_title'),
-                'shortcode': job.get('shortcode'),
-                'state': job.get('state', 'published'),
-                'status': 'published',
-                'department': job.get('department', {}).get('name', '') if job.get('department') else '',
-                'location': job.get('location', {}),
-                'formatted_location': format_location(job.get('location', {})),
-                'created_at': job.get('created_at'),
-                'updated_at': job.get('updated_at'),
-                'employment_type': job.get('employment_type'),
-                'experience': job.get('experience'),
-                'description': job.get('description', ''),
-                'requirements': job.get('requirements', ''),
-                'application_url': job.get('application_url', ''),
-                'applications': job.get('candidate_count', 0)
-            }
-            all_jobs.append(formatted_job)
+            if isinstance(job, dict):
+                formatted_job = {
+                    'id': job.get('id'),
+                    'title': job.get('title'),
+                    'full_title': job.get('full_title'),
+                    'shortcode': job.get('shortcode'),
+                    'state': job.get('state', 'published'),
+                    'status': 'published',
+                    'department': job.get('department', {}).get('name', '') if isinstance(job.get('department'), dict) else str(job.get('department', '')),
+                    'location': job.get('location', {}),
+                    'formatted_location': format_location(job.get('location', {})),
+                    'created_at': job.get('created_at'),
+                    'updated_at': job.get('updated_at'),
+                    'employment_type': job.get('employment_type'),
+                    'experience': job.get('experience'),
+                    'description': job.get('description', ''),
+                    'requirements': job.get('requirements', ''),
+                    'application_url': job.get('application_url', ''),
+                    'applications': job.get('candidate_count', 0)
+                }
+                all_jobs.append(formatted_job)
         
         # Process archived jobs
         for job in archived_jobs:
-            formatted_job = {
-                'id': job.get('id'),
-                'title': job.get('title'),
-                'state': job.get('state', 'archived'),
-                'status': 'archived',
-                'department': job.get('department', {}).get('name', '') if job.get('department') else '',
-                'location': job.get('location', {}),
-                'formatted_location': format_location(job.get('location', {})),
-                'created_at': job.get('created_at'),
-                'applications': job.get('candidate_count', 0)
-            }
-            all_jobs.append(formatted_job)
+            if isinstance(job, dict):
+                formatted_job = {
+                    'id': job.get('id'),
+                    'title': job.get('title'),
+                    'state': job.get('state', 'archived'),
+                    'status': 'archived',
+                    'department': job.get('department', {}).get('name', '') if isinstance(job.get('department'), dict) else str(job.get('department', '')),
+                    'location': job.get('location', {}),
+                    'formatted_location': format_location(job.get('location', {})),
+                    'created_at': job.get('created_at'),
+                    'applications': job.get('candidate_count', 0)
+                }
+                all_jobs.append(formatted_job)
         
         logger.info(f"Retrieved {len(all_jobs)} total jobs from Workable API ({len(published_jobs)} published, {len(archived_jobs)} archived)")
         return all_jobs
