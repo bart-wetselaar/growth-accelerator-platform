@@ -1,0 +1,5 @@
+# Azure Deployment Trigger
+# Generated: 2025-06-23T17:25:09.104306
+# Reason: Auto-fix deployment issue
+
+This file triggers a fresh deployment to Azure Web App.
