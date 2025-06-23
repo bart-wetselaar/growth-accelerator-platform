@@ -33,10 +33,11 @@ try:
     import staffing_app
     logger.info("Staffing app imported successfully")
     
-    # Ensure app context and routes are properly registered
+    # Force route registration to fix 404 issues
+    import force_flask_routes
+    
     with app.app_context():
-        # Force route registration
-        logger.info(f"Registered routes: {[rule.rule for rule in app.url_map.iter_rules()]}")
+        logger.info(f"Total routes registered: {len(list(app.url_map.iter_rules()))}")
     
     # Initialize self-debugging system for Azure
     if is_azure:
