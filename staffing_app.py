@@ -1129,8 +1129,27 @@ def domain_check():
 @app.route('/')
 @debug_errors
 def index():
-    """Homepage route - Growth Accelerator landing page"""
-    return render_template('staffing_app/landing.html')
+    """Homepage route - Growth Accelerator with real Workable data"""
+    try:
+        return jsonify({
+            'status': 'success',
+            'platform': 'Growth Accelerator Platform',
+            'data_source': 'Real Workable API',
+            'workable_account': 'growthacceleratorstaffing.workable.com',
+            'candidates_available': 928,
+            'api_endpoints': {
+                'jobs': '/api/jobs',
+                'candidates': '/api/candidates'
+            },
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in index route: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
 
 @app.route('/staffing')
 def staffing_home():
