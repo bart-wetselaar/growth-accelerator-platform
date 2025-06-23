@@ -1115,14 +1115,35 @@ def api_jobs():
         jobs = get_workable_jobs()
         return jsonify({
             'success': True,
-            'data': jobs,
-            'count': len(jobs)
+            'jobs': jobs,
+            'count': len(jobs),
+            'source': 'workable_api'
         })
     except Exception as e:
         logger.error(f"Error in api_jobs: {str(e)}")
         return jsonify({
             'success': False,
-            'error': 'Unable to fetch jobs data'
+            'error': 'Unable to fetch jobs data',
+            'details': str(e)
+        }), 500
+
+@app.route('/api/candidates')
+def api_candidates():
+    """API endpoint for candidates data"""
+    try:
+        candidates = get_workable_candidates()
+        return jsonify({
+            'success': True,
+            'candidates': candidates,
+            'count': len(candidates),
+            'source': 'workable_api'
+        })
+    except Exception as e:
+        logger.error(f"Error in api_candidates: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Unable to fetch candidates data',
+            'details': str(e)
         }), 500
 
 # Static file handling
