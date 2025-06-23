@@ -1,10 +1,5 @@
-# Services package for external API integrations
+"""Services package for Workable API integration"""
 
 def init_services():
-    """Initialize all services"""
-    try:
-        from .workable_api import workable_api
-        return True
-    except Exception as e:
-        print(f"Service initialization error: {e}")
-        return False
+    """Initialize services - placeholder for main.py import"""
+    pass
