@@ -1,22 +1,20 @@
 #!/bin/bash
-echo "Starting Growth Accelerator Platform on Azure..."
+# Azure Web App startup script for Growth Accelerator Platform
 
 # Set environment variables
 export PYTHONPATH=/home/site/wwwroot
 export FLASK_APP=main.py
 export FLASK_ENV=production
 
-# Change to app directory
-cd /home/site/wwwroot
-
 # Install dependencies if needed
-if [ ! -f ".deps_installed" ]; then
-    echo "Installing dependencies..."
-    pip install --upgrade pip
+if [ ! -d "/home/site/wwwroot/venv" ]; then
+    python -m venv /home/site/wwwroot/venv
+    source /home/site/wwwroot/venv/bin/activate
     pip install -r requirements.txt
-    touch .deps_installed
+else
+    source /home/site/wwwroot/venv/bin/activate
 fi
 
-# Start the application
-echo "Starting Gunicorn server..."
-gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 --preload main:app
+# Start Gunicorn
+cd /home/site/wwwroot
+gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 main:app
