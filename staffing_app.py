@@ -721,90 +721,20 @@ def generate_sample_clients(count=8):
     return clients
 
 def get_workable_jobs():
-    """Fetch jobs data"""
+    """Fetch jobs from real Workable API"""
     try:
-        return [
-            {
-                "id": "job_001",
-                "title": "Senior Software Engineer",
-                "full_title": "Senior Software Engineer - Full Stack",
-                "shortcode": "SSE001",
-                "code": "TECH-001",
-                "state": "published",
-                "status": "published",
-                "department": "Technology",
-                "url": "/jobs/senior-software-engineer",
-                "application_url": "/apply/senior-software-engineer",
-                "shortlink": "swe-001",
-                "location": {"city": "Amsterdam", "country": "Netherlands"},
-                "formatted_location": "Amsterdam, Netherlands",
-                "created_at": "2025-06-20T10:00:00Z",
-                "updated_at": "2025-06-20T10:00:00Z",
-                "published_at": "2025-06-20T10:00:00Z",
-                "employment_type": "full_time",
-                "experience": "senior",
-                "function": "Software Development",
-                "salary": {"min": 70000, "max": 90000, "currency": "EUR"},
-                "benefits": ["Health insurance", "Remote work", "Learning budget"],
-                "requirements": ["5+ years Python experience", "Flask/Django knowledge", "Database design"],
-                "description": "We are looking for a Senior Software Engineer to join our innovative team.",
-                "applications": 12
-            },
-            {
-                "id": "job_002",
-                "title": "Product Manager",
-                "full_title": "Product Manager - Growth",
-                "shortcode": "PM001",
-                "code": "PROD-001",
-                "state": "published",
-                "status": "published",
-                "department": "Product",
-                "url": "/jobs/product-manager",
-                "application_url": "/apply/product-manager",
-                "shortlink": "pm-001",
-                "location": {"city": "Remote", "country": "Global"},
-                "formatted_location": "Remote",
-                "created_at": "2025-06-19T14:30:00Z",
-                "updated_at": "2025-06-19T14:30:00Z",
-                "published_at": "2025-06-19T14:30:00Z",
-                "employment_type": "full_time",
-                "experience": "mid_level",
-                "function": "Product Management",
-                "salary": {"min": 60000, "max": 80000, "currency": "EUR"},
-                "benefits": ["Flexible hours", "Equity package", "Conference budget"],
-                "requirements": ["3+ years product management", "Agile methodology", "User research"],
-                "description": "Join our product team to drive innovation and growth.",
-                "applications": 8
-            },
-            {
-                "id": "job_003",
-                "title": "UX Designer",
-                "full_title": "UX Designer - Digital Products",
-                "shortcode": "UXD001",
-                "code": "DES-001",
-                "state": "published",
-                "status": "published",
-                "department": "Design",
-                "url": "/jobs/ux-designer",
-                "application_url": "/apply/ux-designer",
-                "shortlink": "ux-001",
-                "location": {"city": "Rotterdam", "country": "Netherlands"},
-                "formatted_location": "Rotterdam, Netherlands",
-                "created_at": "2025-06-18T09:15:00Z",
-                "updated_at": "2025-06-18T09:15:00Z",
-                "published_at": "2025-06-18T09:15:00Z",
-                "employment_type": "contract",
-                "experience": "mid_level",
-                "function": "User Experience Design",
-                "salary": {"min": 50000, "max": 65000, "currency": "EUR"},
-                "benefits": ["Creative freedom", "Design tools budget", "Flexible schedule"],
-                "requirements": ["Figma expertise", "User testing", "Design systems"],
-                "description": "Create beautiful and intuitive user experiences for our digital products.",
-                "applications": 15
-            }
-        ]
+        from services.workable_api import get_workable_jobs_real
+        jobs = get_workable_jobs_real()
+        
+        if jobs:
+            logger.info(f"Retrieved {len(jobs)} jobs from Workable API")
+            return jobs
+        else:
+            logger.warning("No jobs retrieved from Workable API, check credentials")
+            return []
+            
     except Exception as e:
-        logger.error(f"Error in get_workable_jobs: {str(e)}")
+        logger.error(f"Error fetching jobs from Workable API: {str(e)}")
         return []
         
 def get_workable_job_details(job_id):
@@ -821,108 +751,20 @@ def get_workable_job_details(job_id):
         return None
 
 def get_workable_candidates():
-    """Fetch candidates from the Workable API or return sample data"""
+    """Fetch candidates from real Workable API"""
     try:
-        # For now, return sample candidates since Workable API integration is not available
-        return [
-            {
-                "id": "candidate_001",
-                "name": "Emma Johnson",
-                "first_name": "Emma",
-                "last_name": "Johnson",
-                "email": "emma.johnson@email.com",
-                "phone": "+31 6 1234 5678",
-                "created_at": "2025-06-20T11:30:00Z",
-                "updated_at": "2025-06-20T11:30:00Z",
-                "domain": "Software Engineering",
-                "status": "interviewing",
-                "stage": "technical_interview",
-                "experience": "senior",
-                "skills": ["Python", "Flask", "PostgreSQL", "React", "Docker"],
-                "summary": "Experienced software engineer with 6 years in web development, specializing in Python and modern web frameworks.",
-                "cover_letter": "I am excited about the opportunity to join your team and contribute to innovative projects.",
-                "resume_url": "/resumes/emma_johnson.pdf",
-                "profile_url": "/candidates/emma-johnson",
-                "current_position": "Senior Developer at TechCorp",
-                "social_profiles": [
-                    {"name": "LinkedIn", "url": "https://linkedin.com/in/emmajohnson"},
-                    {"name": "GitHub", "url": "https://github.com/emmajohnson"}
-                ]
-            },
-            {
-                "id": "candidate_002",
-                "name": "Lucas van der Berg",
-                "first_name": "Lucas",
-                "last_name": "van der Berg",
-                "email": "lucas.vandenberg@email.com",
-                "phone": "+31 6 9876 5432",
-                "created_at": "2025-06-19T16:45:00Z",
-                "updated_at": "2025-06-19T16:45:00Z",
-                "domain": "Product Management",
-                "status": "applied",
-                "stage": "screening",
-                "experience": "mid_level",
-                "skills": ["Product Management", "Agile", "Jira", "Analytics", "User Research"],
-                "summary": "Product manager with 4 years experience in SaaS companies, focused on user-centric product development.",
-                "cover_letter": "I believe my experience in product strategy aligns perfectly with your company's vision.",
-                "resume_url": "/resumes/lucas_vandenberg.pdf",
-                "profile_url": "/candidates/lucas-vandenberg",
-                "current_position": "Product Manager at StartupXYZ",
-                "social_profiles": [
-                    {"name": "LinkedIn", "url": "https://linkedin.com/in/lucasvandenberg"}
-                ]
-            },
-            {
-                "id": "candidate_003",
-                "name": "Sofia Martinez",
-                "first_name": "Sofia",
-                "last_name": "Martinez",
-                "email": "sofia.martinez@email.com",
-                "phone": "+31 6 5555 1234",
-                "created_at": "2025-06-18T13:20:00Z",
-                "updated_at": "2025-06-18T13:20:00Z",
-                "domain": "User Experience Design",
-                "status": "qualified",
-                "stage": "final_interview",
-                "experience": "mid_level",
-                "skills": ["UX Design", "Figma", "User Research", "Prototyping", "Design Systems"],
-                "summary": "Creative UX designer with strong research and prototyping skills, passionate about user-centered design.",
-                "cover_letter": "I am passionate about creating intuitive user experiences that drive business success.",
-                "resume_url": "/resumes/sofia_martinez.pdf",
-                "profile_url": "/candidates/sofia-martinez",
-                "current_position": "UX Designer at DesignStudio",
-                "social_profiles": [
-                    {"name": "LinkedIn", "url": "https://linkedin.com/in/sofiamrtnz"},
-                    {"name": "Dribbble", "url": "https://dribbble.com/sofiadesigns"}
-                ]
-            },
-            {
-                "id": "candidate_004",
-                "name": "Michael Chen",
-                "first_name": "Michael",
-                "last_name": "Chen",
-                "email": "michael.chen@email.com",
-                "phone": "+31 6 7777 8888",
-                "created_at": "2025-06-17T10:00:00Z",
-                "updated_at": "2025-06-17T10:00:00Z",
-                "domain": "DevOps Engineering",
-                "status": "hired",
-                "stage": "offer_accepted",
-                "experience": "senior",
-                "skills": ["DevOps", "AWS", "Docker", "Kubernetes", "Terraform"],
-                "summary": "DevOps engineer with expertise in cloud infrastructure and automation, experienced in scaling applications.",
-                "cover_letter": "I am excited to bring my infrastructure expertise to help scale your platform.",
-                "resume_url": "/resumes/michael_chen.pdf",
-                "profile_url": "/candidates/michael-chen",
-                "current_position": "DevOps Lead at CloudTech",
-                "social_profiles": [
-                    {"name": "LinkedIn", "url": "https://linkedin.com/in/michaelchen"},
-                    {"name": "GitHub", "url": "https://github.com/mchen-devops"}
-                ]
-            }
-        ]
+        from services.workable_api import get_workable_candidates_real
+        candidates = get_workable_candidates_real()
+        
+        if candidates:
+            logger.info(f"Retrieved {len(candidates)} candidates from Workable API")
+            return candidates
+        else:
+            logger.warning("No candidates retrieved from Workable API, check credentials")
+            return []
+            
     except Exception as e:
-        logger.error(f"Error in get_workable_candidates: {str(e)}")
+        logger.error(f"Error fetching candidates from Workable API: {str(e)}")
         return []
 
 def api_jobs_list(data):
