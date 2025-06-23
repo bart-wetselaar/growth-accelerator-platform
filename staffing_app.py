@@ -1059,58 +1059,13 @@ def api_jobs():
         # Use the actual get_workable_jobs function that's already defined
         jobs = get_workable_jobs()
         
-        # If no jobs from Workable, provide sample data
-        if not jobs:
-            jobs = [
-                {
-                    'id': 'job_001',
-                    'title': 'Senior Software Engineer',
-                    'department': 'Technology',
-                    'location': {'city': 'Amsterdam', 'country': 'Netherlands'},
-                    'formatted_location': 'Amsterdam, Netherlands',
-                    'status': 'published',
-                    'employment_type': 'full_time',
-                    'experience': 'senior',
-                    'created_at': '2025-06-20T10:00:00Z',
-                    'description': 'We are looking for a Senior Software Engineer to join our innovative team.',
-                    'requirements': ['5+ years Python experience', 'Flask/Django knowledge', 'Database design'],
-                    'applications': 12
-                },
-                {
-                    'id': 'job_002', 
-                    'title': 'Product Manager',
-                    'department': 'Product',
-                    'location': {'city': 'Remote', 'country': 'Global'},
-                    'formatted_location': 'Remote',
-                    'status': 'published',
-                    'employment_type': 'full_time',
-                    'experience': 'mid_level',
-                    'created_at': '2025-06-19T14:30:00Z',
-                    'description': 'Join our product team to drive innovation and growth.',
-                    'requirements': ['3+ years product management', 'Agile methodology', 'User research'],
-                    'applications': 8
-                },
-                {
-                    'id': 'job_003',
-                    'title': 'UX Designer', 
-                    'department': 'Design',
-                    'location': {'city': 'Rotterdam', 'country': 'Netherlands'},
-                    'formatted_location': 'Rotterdam, Netherlands',
-                    'status': 'published',
-                    'employment_type': 'contract',
-                    'experience': 'mid_level',
-                    'created_at': '2025-06-18T09:15:00Z',
-                    'description': 'Create beautiful and intuitive user experiences.',
-                    'requirements': ['Figma expertise', 'User testing', 'Design systems'],
-                    'applications': 15
-                }
-            ]
+        # Jobs are from real Workable API - no fallback to sample data
         
         return jsonify({
             'success': True,
             'jobs': jobs,
             'count': len(jobs),
-            'source': 'workable_api' if jobs else 'sample_data'
+            'source': 'workable_api'
         })
     except Exception as e:
         logger.error(f"Error in api_jobs: {str(e)}")
@@ -1127,76 +1082,13 @@ def api_candidates():
         # Use the actual get_workable_candidates function that's already defined
         candidates = get_workable_candidates()
         
-        # If no candidates from Workable, provide sample data
-        if not candidates:
-            candidates = [
-                {
-                    'id': 'candidate_001',
-                    'name': 'Emma Johnson',
-                    'first_name': 'Emma',
-                    'last_name': 'Johnson',
-                    'email': 'emma.johnson@email.com',
-                    'phone': '+31 6 1234 5678',
-                    'status': 'interviewing',
-                    'stage': 'technical_interview',
-                    'experience': 'senior',
-                    'skills': ['Python', 'Flask', 'PostgreSQL', 'React'],
-                    'created_at': '2025-06-20T11:30:00Z',
-                    'summary': 'Experienced software engineer with 6 years in web development.',
-                    'current_position': 'Senior Developer at TechCorp'
-                },
-                {
-                    'id': 'candidate_002',
-                    'name': 'Lucas van der Berg',
-                    'first_name': 'Lucas',
-                    'last_name': 'van der Berg',
-                    'email': 'lucas.vandenberg@email.com',
-                    'phone': '+31 6 9876 5432',
-                    'status': 'applied',
-                    'stage': 'screening',
-                    'experience': 'mid_level',
-                    'skills': ['Product Management', 'Agile', 'Jira', 'Analytics'],
-                    'created_at': '2025-06-19T16:45:00Z',
-                    'summary': 'Product manager with 4 years experience in SaaS companies.',
-                    'current_position': 'Product Manager at StartupXYZ'
-                },
-                {
-                    'id': 'candidate_003',
-                    'name': 'Sofia Martinez',
-                    'first_name': 'Sofia',
-                    'last_name': 'Martinez',
-                    'email': 'sofia.martinez@email.com',
-                    'phone': '+31 6 5555 1234',
-                    'status': 'qualified',
-                    'stage': 'final_interview',
-                    'experience': 'mid_level',
-                    'skills': ['UX Design', 'Figma', 'User Research', 'Prototyping'],
-                    'created_at': '2025-06-18T13:20:00Z',
-                    'summary': 'Creative UX designer with strong research and prototyping skills.',
-                    'current_position': 'UX Designer at DesignStudio'
-                },
-                {
-                    'id': 'candidate_004',
-                    'name': 'Michael Chen',
-                    'first_name': 'Michael',
-                    'last_name': 'Chen',
-                    'email': 'michael.chen@email.com',
-                    'phone': '+31 6 7777 8888',
-                    'status': 'hired',
-                    'stage': 'offer_accepted',
-                    'experience': 'senior',
-                    'skills': ['DevOps', 'AWS', 'Docker', 'Kubernetes'],
-                    'created_at': '2025-06-17T10:00:00Z',
-                    'summary': 'DevOps engineer with expertise in cloud infrastructure.',
-                    'current_position': 'DevOps Lead at CloudTech'
-                }
-            ]
+        # Candidates are from real Workable API - no fallback to sample data
         
         return jsonify({
             'success': True,
             'candidates': candidates,
             'count': len(candidates),
-            'source': 'workable_api' if candidates else 'sample_data'
+            'source': 'workable_api'
         })
     except Exception as e:
         logger.error(f"Error in api_candidates: {str(e)}")
