@@ -33,8 +33,7 @@ try:
     import staffing_app
     logger.info("Staffing app imported successfully")
     
-    # Force route registration to fix 404 issues
-    import force_flask_routes
+    # Routes are now properly registered in staffing_app.py
     
     with app.app_context():
         logger.info(f"Total routes registered: {len(list(app.url_map.iter_rules()))}")
