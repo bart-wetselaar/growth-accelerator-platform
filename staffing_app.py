@@ -598,8 +598,13 @@ except Exception as e:
     logger.error(f"Failed to start auto-recovery system: {e}")
 
 # Initialize services
-from services import init_services
-app_services = init_services(app)
+try:
+    from services import init_services
+    app_services = init_services()
+    logger.info("✓ Services initialized successfully")
+except Exception as e:
+    logger.warning(f"Service initialization: {e}")
+    app_services = {}
 
 # Add custom template filters
 @app.template_filter('date')
