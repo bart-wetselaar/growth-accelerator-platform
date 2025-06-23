@@ -721,8 +721,19 @@ def generate_sample_clients(count=8):
     return clients
 
 def get_workable_jobs():
-    """Fetch jobs data"""
+    """Get jobs data from Workable API or fallback to sample data"""
     try:
+        # Try to get real data from Workable API
+        from services.workable_api import workable_api
+        
+        if workable_api.connected:
+            real_jobs = workable_api.get_jobs()
+            if real_jobs:
+                logger.info(f"Using {len(real_jobs)} real jobs from Workable API")
+                return real_jobs
+        
+        # Fallback to sample data if API not available
+        logger.warning("Using sample jobs data - Workable API not connected")
         return [
             {
                 "id": "job_001",
@@ -821,9 +832,19 @@ def get_workable_job_details(job_id):
         return None
 
 def get_workable_candidates():
-    """Fetch candidates from the Workable API or return sample data"""
+    """Get candidates data from Workable API or fallback to sample data"""
     try:
-        # For now, return sample candidates since Workable API integration is not available
+        # Try to get real data from Workable API
+        from services.workable_api import workable_api
+        
+        if workable_api.connected:
+            real_candidates = workable_api.get_candidates()
+            if real_candidates:
+                logger.info(f"Using {len(real_candidates)} real candidates from Workable API")
+                return real_candidates
+        
+        # Fallback to sample data if API not available
+        logger.warning("Using sample candidates data - Workable API not connected")
         return [
             {
                 "id": "candidate_001",
@@ -1214,7 +1235,7 @@ def api_consultants():
 def api_jobs():
     """API endpoint for jobs data"""
     try:
-        # Use the actual get_workable_jobs function that's already defined
+        # Get real Workable jobs data
         jobs = get_workable_jobs()
         
         # If no jobs from Workable, provide sample data
@@ -1264,11 +1285,18 @@ def api_jobs():
                 }
             ]
         
+        # Check if we're using real Workable data
+        try:
+            from services.workable_api import workable_api
+            data_source = 'workable_api' if workable_api.connected else 'sample_data'
+        except:
+            data_source = 'sample_data'
+            
         return jsonify({
             'success': True,
             'jobs': jobs,
             'count': len(jobs),
-            'source': 'workable_api' if jobs else 'sample_data'
+            'source': data_source
         })
     except Exception as e:
         logger.error(f"Error in api_jobs: {str(e)}")
@@ -1282,7 +1310,7 @@ def api_jobs():
 def api_candidates():
     """API endpoint for candidates data"""
     try:
-        # Use the actual get_workable_candidates function that's already defined
+        # Get real Workable candidates data
         candidates = get_workable_candidates()
         
         # If no candidates from Workable, provide sample data
@@ -1397,10 +1425,13 @@ def domain_check():
 
 # Main website routes
 @app.route('/')
-@debug_errors
 def index():
     """Homepage route - Growth Accelerator landing page"""
-    return render_template('staffing_app/landing.html')
+    try:
+        return render_template('staffing_app/landing.html')
+    except Exception as e:
+        logger.error(f"Error in index route: {str(e)}")
+        return f"Growth Accelerator Platform - Error loading: {str(e)}", 500
 
 @app.route('/staffing')
 def staffing_home():
