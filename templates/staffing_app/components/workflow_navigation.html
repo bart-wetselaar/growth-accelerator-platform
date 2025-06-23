@@ -1,0 +1,202 @@
+{% macro workflow_navigation(current_step) %}
+<style>
+/* Workflow component responsive styles */
+.workflow-container {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.workflow-steps {
+    display: flex;
+    justify-content: space-between;
+    min-width: 600px;
+}
+
+.workflow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0 10px;
+}
+
+.workflow-step:not(:last-child):after {
+    content: '';
+    position: absolute;
+    top: 25px;
+    right: -30px;
+    width: 60px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    z-index: 1;
+}
+
+.workflow-step-icon {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 36, 99, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 1.25rem;
+    position: relative;
+    z-index: 2;
+    border: 2px solid transparent;
+}
+
+.workflow-step.active .workflow-step-icon {
+    border: 2px solid var(--ga-accent);
+    background-color: var(--ga-primary);
+    color: var(--ga-accent);
+}
+
+.workflow-step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.workflow-step-button {
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    background-color: rgba(0, 36, 99, 0.7);
+    border-radius: 12px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.workflow-step-button:hover {
+    background-color: var(--ga-primary);
+    color: white;
+}
+
+.workflow-step-button.current {
+    background-color: var(--ga-accent);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .workflow-container h2 {
+        font-size: 1.5rem;
+    }
+    
+    .workflow-tagline {
+        font-size: 1rem !important;
+    }
+}
+</style>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h2 class="mb-4">Growth Accelerator Workflow</h2>
+        <p class="text-center mb-4 workflow-tagline" style="font-size: 1.25rem; color: var(--ga-accent); font-weight: 500;">Match. Onboard. Hire.</p>
+        
+        <!-- Workflow Progress Steps -->
+        <div class="workflow-container">
+            <div class="workflow-steps">
+                <div class="workflow-step {% if current_step == 'dashboard' %}active{% endif %}">
+                    <div class="workflow-step-icon">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+                    <div class="workflow-step-label">Dashboard</div>
+                    {% if current_step == 'dashboard' %}
+                    <div class="workflow-step-button current">
+                        Current
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('dashboard') }}" class="workflow-step-button">
+                        Go to
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="workflow-step {% if current_step == 'jobs' %}active{% endif %}">
+                    <div class="workflow-step-icon">
+                        <i class="bi bi-briefcase"></i>
+                    </div>
+                    <div class="workflow-step-label">Jobs</div>
+                    {% if current_step == 'jobs' %}
+                    <div class="workflow-step-button current">
+                        Current
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('jobs') }}" class="workflow-step-button">
+                        Go to
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="workflow-step {% if current_step == 'consultants' %}active{% endif %}">
+                    <div class="workflow-step-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="workflow-step-label">Candidates</div>
+                    {% if current_step == 'consultants' %}
+                    <div class="workflow-step-button current">
+                        Current
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('candidates') }}" class="workflow-step-button">
+                        Go to
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="workflow-step {% if current_step == 'matching' %}active{% endif %}">
+                    <div class="workflow-step-icon">
+                        <i class="bi bi-check2-square"></i>
+                    </div>
+                    <div class="workflow-step-label">Matching</div>
+                    {% if current_step == 'matching' %}
+                    <div class="workflow-step-button current">
+                        Current
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('matching') }}" class="workflow-step-button">
+                        Go to
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="workflow-step {% if current_step == 'onboarding' %}active{% endif %}">
+                    <div class="workflow-step-icon">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
+                    <div class="workflow-step-label">Onboarding</div>
+                    {% if current_step == 'onboarding' %}
+                    <div class="workflow-step-button current">
+                        Current
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('onboarding') }}" class="workflow-step-button">
+                        Go to
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="workflow-step {% if current_step == 'backoffice' %}active{% endif %}">
+                    <div class="workflow-step-icon">
+                        <i class="bi bi-calculator"></i>
+                    </div>
+                    <div class="workflow-step-label">Back Office</div>
+                    {% if current_step == 'backoffice' %}
+                    <div class="workflow-step-button current">
+                        Current
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('backoffice') }}" class="workflow-step-button">
+                        Go to
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
