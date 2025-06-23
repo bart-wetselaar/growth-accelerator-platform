@@ -1054,12 +1054,10 @@ def api_consultants():
 
 @app.route('/api/jobs')
 def api_jobs():
-    """API endpoint for jobs data"""
+    """API endpoint for real Workable jobs data"""
     try:
-        # Use the actual get_workable_jobs function that's already defined
-        jobs = get_workable_jobs()
-        
-        # Jobs are from real Workable API - no fallback to sample data
+        from services.workable_api import get_workable_jobs_real
+        jobs = get_workable_jobs_real()
         
         return jsonify({
             'success': True,
@@ -1071,18 +1069,16 @@ def api_jobs():
         logger.error(f"Error in api_jobs: {str(e)}")
         return jsonify({
             'success': False,
-            'error': 'Unable to fetch jobs data',
+            'error': 'Unable to fetch jobs from Workable API',
             'details': str(e)
         }), 500
 
-@app.route('/api/candidates')
+@app.route('/api/candidates') 
 def api_candidates():
-    """API endpoint for candidates data"""
+    """API endpoint for real Workable candidates data"""
     try:
-        # Use the actual get_workable_candidates function that's already defined
-        candidates = get_workable_candidates()
-        
-        # Candidates are from real Workable API - no fallback to sample data
+        from services.workable_api import get_workable_candidates_real
+        candidates = get_workable_candidates_real()
         
         return jsonify({
             'success': True,
@@ -1094,7 +1090,7 @@ def api_candidates():
         logger.error(f"Error in api_candidates: {str(e)}")
         return jsonify({
             'success': False,
-            'error': 'Unable to fetch candidates data',
+            'error': 'Unable to fetch candidates from Workable API',
             'details': str(e)
         }), 500
 
