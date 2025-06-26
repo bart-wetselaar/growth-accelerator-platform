@@ -1,0 +1,8 @@
+# Custom Domain Deployment Trigger
+# Domain: app.growthaccelerator.nl
+# Azure Web App: ga-hwaffmb0eqajfza5
+# Triggered: 2025-06-26T17:26:20.998864
+
+CUSTOM_DOMAIN_DEPLOYMENT=true
+DEPLOYMENT_TARGET=app.growthaccelerator.nl
+AZURE_WEBAPP=ga-hwaffmb0eqajfza5
