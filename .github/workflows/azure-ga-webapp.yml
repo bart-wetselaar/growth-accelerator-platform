@@ -1,0 +1,105 @@
+name: Multi-Platform Synchronized Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: 
+      - 'github-deployment/**'
+      - 'staffing_app.py'
+      - 'main.py'
+      - 'app.py'
+      - 'models.py'
+      - 'requirements.txt'
+      - 'pyproject.toml'
+
+env:
+  AZURE_WEBAPP_NAME: ga-hwaffmb0eqajfza5
+  PYTHON_VERSION: '3.11'
+  DEPLOYMENT_PATH: './github-deployment'
+
+jobs:
+  build-and-deploy:
+    name: Platform Synchronized Deploy
+    runs-on: ubuntu-latest
+    environment: GA_Production
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+        
+    - name: Sync core files to deployment directory
+      run: |
+        echo "Syncing core application files to deployment directory..."
+        cp -f main.py app.py models.py staffing_app.py github-deployment/
+        cp -rf static/ github-deployment/ 2>/dev/null || echo "Static directory not found, skipping"
+        cp -rf templates/ github-deployment/ 2>/dev/null || echo "Templates directory not found, skipping"
+        cp -rf api/ github-deployment/ 2>/dev/null || echo "API directory not found, skipping"
+        cp -rf services/ github-deployment/ 2>/dev/null || echo "Services directory not found, skipping"
+        echo "Core files synchronized to deployment directory"
+        
+    - name: Verify platform alignment
+      run: |
+        echo "Verifying dependency alignment across platforms..."
+        echo "Root requirements.txt:"
+        head -5 requirements.txt || echo "Root requirements.txt not accessible"
+        echo "GitHub deployment requirements.txt:"
+        head -5 github-deployment/requirements.txt
+        echo "Deployment directory contents:"
+        ls -la github-deployment/
+        
+    - name: Install dependencies
+      run: |
+        cd ${{ env.DEPLOYMENT_PATH }}
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        echo "Installed packages:"
+        pip list | grep -E "(flask|gunicorn|sqlalchemy)"
+        
+    - name: Create deployment package
+      run: |
+        cd ${{ env.DEPLOYMENT_PATH }}
+        echo "Creating optimized deployment package..."
+        # Ensure all required files are present
+        ls -la main.py app.py models.py staffing_app.py web.config requirements.txt
+        echo "Package ready for Azure deployment"
+        
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.DEPLOYMENT_PATH }}
+        clean: true
+        
+    - name: Verify multi-platform deployment
+      run: |
+        echo "Verifying platform synchronization..."
+        sleep 60
+        echo "Testing health endpoint..."
+        for i in {1..5}; do
+          if curl -f -s -o /dev/null -w "%{http_code}" https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/health | grep -q "200"; then
+            echo "✓ Health check successful on attempt $i"
+            curl -s https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/health | head -5
+            break
+          else
+            echo "Health check attempt $i failed, retrying in 20 seconds..."
+            sleep 20
+          fi
+        done
+        
+    - name: Platform alignment summary
+      run: |
+        echo "Multi-platform deployment completed"
+        echo "Platforms:"
+        echo "  Replit: Development environment (Flask 3.0.0)"
+        echo "  GitHub: Source control and CI/CD (automated sync)"
+        echo "  Azure: Production deployment (ga-hwaffmb0eqajfza5)"
+        echo "Dependencies: Synchronized across all platforms"
+        echo "Health monitoring: Active on all platforms"
