@@ -1,15 +1,24 @@
-name: Simple Azure Deploy
+name: "[DISABLED] simple-azure-deploy.yml"
+
+# This workflow has been disabled to prevent deployment conflicts
+# Only azure-ga-webapp.yml and azure-custom-domain.yml should be active
 
 on:
+  # Disabled to prevent conflicts - use azure-ga-webapp.yml instead
   workflow_dispatch:
-  
+    inputs:
+      force_enable:
+        description: 'Force enable this disabled workflow'
+        required: false
+        default: 'false'
+
 jobs:
-  deploy:
+  disabled_notice:
+    if: github.event.inputs.force_enable == 'true'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/webapps-deploy@v2
-      with:
-        app-name: ga-hwaffmb0eqajfza5
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './github-deployment'
+      - name: Disabled Notice
+        run: |
+          echo "This workflow has been disabled to prevent deployment conflicts"
+          echo "Active workflows: azure-ga-webapp.yml, azure-custom-domain.yml"
+          echo "Original workflow: simple-azure-deploy.yml"
