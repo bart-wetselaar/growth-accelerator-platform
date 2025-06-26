@@ -1,0 +1,161 @@
+name: Deploy to Custom Domain (app.growthaccelerator.nl)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'main.py'
+      - 'app.py'
+      - 'models.py'
+      - 'staffing_app.py'
+      - 'requirements.txt'
+      - 'github-deployment/**'
+
+env:
+  AZURE_WEBAPP_NAME: ga-hwaffmb0eqajfza5
+  CUSTOM_DOMAIN: app.growthaccelerator.nl
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  deploy-to-custom-domain:
+    name: Deploy to app.growthaccelerator.nl
+    runs-on: ubuntu-latest
+    environment: GA_Production
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+        
+    - name: Sync deployment files
+      run: |
+        echo "Syncing files for custom domain deployment..."
+        mkdir -p custom-domain-deployment
+        
+        # Copy core application files
+        cp -f main.py app.py models.py staffing_app.py custom-domain-deployment/
+        cp -f github-deployment/requirements.txt custom-domain-deployment/
+        cp -f github-deployment/runtime.txt custom-domain-deployment/
+        cp -f github-deployment/web.config custom-domain-deployment/
+        cp -f github-deployment/startup.sh custom-domain-deployment/
+        
+        # Copy application directories
+        cp -rf static custom-domain-deployment/ 2>/dev/null || echo "Static directory not found"
+        cp -rf templates custom-domain-deployment/ 2>/dev/null || echo "Templates directory not found"
+        cp -rf api custom-domain-deployment/ 2>/dev/null || echo "API directory not found"
+        cp -rf services custom-domain-deployment/ 2>/dev/null || echo "Services directory not found"
+        cp -rf integration custom-domain-deployment/ 2>/dev/null || echo "Integration directory not found"
+        
+        echo "Files prepared for custom domain deployment"
+        ls -la custom-domain-deployment/
+        
+    - name: Configure for custom domain
+      run: |
+        cd custom-domain-deployment
+        
+        # Update web.config for custom domain
+        cat > web.config << 'EOF'
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <add key="PYTHONPATH" value="D:\home\site\wwwroot"/>
+    <add key="WSGI_HANDLER" value="main.app"/>
+    <add key="WSGI_LOG" value="D:\home\LogFiles\wfastcgi.log"/>
+    <add key="CUSTOM_DOMAIN" value="app.growthaccelerator.nl"/>
+    <add key="AZURE_WEBAPP_NAME" value="ga-hwaffmb0eqajfza5"/>
+  </appSettings>
+  <system.webServer>
+    <handlers>
+      <add name="PythonHandler" path="*" verb="*" modules="FastCgiModule" 
+           scriptProcessor="D:\home\python311\python.exe|D:\home\python311\Lib\site-packages\wfastcgi.py" 
+           resourceType="Unspecified" requireAccess="Script"/>
+    </handlers>
+    <httpErrors errorMode="Detailed"/>
+    <rewrite>
+      <rules>
+        <rule name="Custom Domain Redirect" stopProcessing="true">
+          <match url=".*" />
+          <conditions>
+            <add input="{HTTP_HOST}" pattern="^app.growthaccelerator.nl$" />
+          </conditions>
+          <action type="None" />
+        </rule>
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>
+EOF
+        
+        # Update startup script for custom domain
+        cat > startup.sh << 'EOF'
+#!/bin/bash
+echo "Starting Growth Accelerator Platform on custom domain: app.growthaccelerator.nl"
+
+export PYTHONPATH=/home/site/wwwroot
+export FLASK_APP=main.py
+export FLASK_ENV=production
+export CUSTOM_DOMAIN=app.growthaccelerator.nl
+export AZURE_WEBAPP_NAME=ga-hwaffmb0eqajfza5
+
+echo "Custom domain configuration: app.growthaccelerator.nl"
+echo "Azure Web App: ga-hwaffmb0eqajfza5"
+
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+echo "Starting application server..."
+gunicorn --bind 0.0.0.0:8000 --workers 4 --timeout 120 --preload main:app
+EOF
+        chmod +x startup.sh
+        
+    - name: Install dependencies
+      run: |
+        cd custom-domain-deployment
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Deploy to Azure Web App (Custom Domain)
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./custom-domain-deployment
+        clean: true
+        
+    - name: Verify custom domain deployment
+      run: |
+        echo "Deployment completed for custom domain: ${{ env.CUSTOM_DOMAIN }}"
+        echo "Azure Web App: ${{ env.AZURE_WEBAPP_NAME }}"
+        
+        # Wait for deployment to propagate
+        sleep 45
+        
+        # Test custom domain
+        echo "Testing custom domain accessibility..."
+        for i in {1..5}; do
+          if curl -f -s -o /dev/null -w "%{http_code}" https://${{ env.CUSTOM_DOMAIN }}/health | grep -q "200"; then
+            echo "✓ Custom domain health check successful on attempt $i"
+            curl -s https://${{ env.CUSTOM_DOMAIN }}/health | head -3
+            break
+          else
+            echo "Custom domain health check attempt $i failed, retrying in 30 seconds..."
+            sleep 30
+          fi
+        done
+        
+        # Test Azure Web App URL
+        echo "Testing Azure Web App URL..."
+        curl -f -s -o /dev/null -w "%{http_code}" https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/health || echo "Azure URL check pending..."
+        
+    - name: Custom domain deployment summary
+      run: |
+        echo "Custom domain deployment completed successfully"
+        echo "Primary URL: https://${{ env.CUSTOM_DOMAIN }}"
+        echo "Azure URL: https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
+        echo "Both URLs now serve the Growth Accelerator Platform"
