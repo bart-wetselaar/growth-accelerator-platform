@@ -159,6 +159,13 @@ def recovery_status():
             "timestamp": datetime.now().isoformat()
         }), 500
 
+# Self-solving system dashboard
+@app.route('/self-solving')
+@debug_errors
+def self_solving_dashboard():
+    """Self-solving system dashboard"""
+    return render_template('self_solving_dashboard.html')
+
 # Manual recovery trigger endpoint
 @app.route('/admin/trigger-recovery', methods=['POST'])
 @debug_errors
@@ -598,8 +605,36 @@ except Exception as e:
     logger.error(f"Failed to start auto-recovery system: {e}")
 
 # Initialize services
-from services import init_services
-app_services = init_services(app)
+try:
+    from always_on_service import start_always_on_service
+    start_always_on_service()
+    logger.info("Always-on service started")
+except ImportError as e:
+    logger.warning(f"Always-on service not available: {e}")
+
+# Initialize self-solving system
+try:
+    from services.self_solving_system import start_self_solving_system
+    start_self_solving_system()
+    logger.info("Self-solving error system activated")
+except ImportError as e:
+    logger.warning(f"Self-solving system not available: {e}")
+
+# Register API blueprints
+try:
+    from api.unified import unified_bp
+    app.register_blueprint(unified_bp)
+    logger.info("Unified API blueprint registered")
+except ImportError as e:
+    logger.error(f"Failed to register unified API: {e}")
+
+try:
+    from api.self_solving import self_solving_bp
+    app.register_blueprint(self_solving_bp)
+    logger.info("Self-solving API blueprint registered")
+except ImportError as e:
+    logger.error(f"Failed to register self-solving API: {e}")
+    logger.warning("Self-solving API not available - system will run without API endpoints")
 
 # Add custom template filters
 @app.template_filter('date')
@@ -1427,11 +1462,12 @@ def domain_check():
 @app.route('/')
 def index():
     """Homepage route - Growth Accelerator landing page"""
+    logger.info("Index route accessed")
     try:
         return render_template('staffing_app/landing.html')
     except Exception as e:
         logger.error(f"Error in index route: {str(e)}")
-        return f"Growth Accelerator Platform - Error loading: {str(e)}", 500
+        return f"Growth Accelerator Platform - Landing page temporarily unavailable", 500
 
 @app.route('/staffing')
 def staffing_home():
