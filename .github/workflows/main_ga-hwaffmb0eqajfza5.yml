@@ -1,96 +1,24 @@
-name: Build and deploy Python app to Azure Web App - ga-hwaffmb0eqajfza5
+name: "[DISABLED] main_ga-hwaffmb0eqajfza5.yml"
+
+# This workflow has been DISABLED to prevent deployment conflicts
+# Only azure-ga-webapp.yml and azure-custom-domain.yml should be active
 
 on:
-  push:
-    branches:
-      - main
+  # DISABLED - conflicts with primary deployment workflows
   workflow_dispatch:
+    inputs:
+      admin_override:
+        description: 'Admin override to enable'
+        required: true
+        default: 'false'
 
 jobs:
-  build:
+  disabled_notice:
+    if: github.event.inputs.admin_override == 'enable_admin_mode'
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python version
-        uses: actions/setup-python@v1
-        with:
-          python-version: '3.11'
-
-      - name: Create and start virtual environment
+      - name: Conflict Prevention Notice
         run: |
-          python -m venv venv
-          source venv/bin/activate
-
-      - name: Install dependencies
-        run: |
-          source venv/bin/activate
-          pip install -r requirements.txt
-        
-      - name: Prepare deployment files
-        run: |
-          # Ensure we have a proper main.py
-          if [ ! -f main.py ]; then
-            cat > main.py << 'EOF'
-import os
-import logging
-from app import app, db
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-try:
-    import models
-    import staffing_app
-    logger.info("Growth Accelerator Platform loaded")
-except Exception as e:
-    logger.error(f"Import error: {e}")
-
-with app.app_context():
-    try:
-        db.create_all()
-        logger.info("Database initialized")
-    except Exception as e:
-        logger.info(f"Database setup: {e}")
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port)
-EOF
-          fi
-
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-
-      - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v3
-        with:
-          name: python-app
-          path: |
-            release.zip
-            !venv/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: python-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v2
-        id: deploy-to-webapp
-        with:
-          app-name: 'ga-hwaffmb0eqajfza5'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8A6E7F23A8CB4D8789F7A34B8A2C9E15 }}
+          echo "This workflow is disabled to prevent Azure deployment conflicts"
+          echo "Active workflows: azure-ga-webapp.yml, azure-custom-domain.yml"
+          echo "Contact admin to re-enable if absolutely necessary"
