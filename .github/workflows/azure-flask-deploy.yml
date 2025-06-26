@@ -1,30 +1,24 @@
-name: Deploy GA Flask App to Azure
+name: "[DISABLED] azure-flask-deploy.yml"
 
-on: # DISABLED - Use azure-webapp-deploy.yml
+# This workflow has been DISABLED to prevent deployment conflicts
+# Only azure-ga-webapp.yml and azure-custom-domain.yml should be active
+
+on:
+  # DISABLED - conflicts with primary deployment workflows
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths: [ 'github-deployment/**' ]
+    inputs:
+      admin_override:
+        description: 'Admin override to enable'
+        required: true
+        default: 'false'
 
 jobs:
-  deploy:
-    runs-on: # DISABLED - Use azure-webapp-deploy.yml ubuntu-latest
+  disabled_notice:
+    if: github.event.inputs.admin_override == 'enable_admin_mode'
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: # DISABLED - Use azure-webapp-deploy.yml '3.11'
-        
-    - name: Install dependencies
-      run: |
-        cd github-deployment
-        pip install -r requirements.txt
-        
-    - name: Deploy to Azure
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ga-hwaffmb0eqajfza5
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './github-deployment'
+      - name: Conflict Prevention Notice
+        run: |
+          echo "This workflow is disabled to prevent Azure deployment conflicts"
+          echo "Active workflows: azure-ga-webapp.yml, azure-custom-domain.yml"
+          echo "Contact admin to re-enable if absolutely necessary"
