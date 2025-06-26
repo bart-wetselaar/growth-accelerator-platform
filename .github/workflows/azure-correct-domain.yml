@@ -1,47 +1,24 @@
-name: Deploy to Correct Azure GA Web App
+name: "[DISABLED] azure-correct-domain.yml"
+
+# This workflow has been DISABLED to prevent deployment conflicts
+# Only azure-ga-webapp.yml and azure-custom-domain.yml should be active
 
 on:
+  # DISABLED - conflicts with primary deployment workflows
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths: [ 'github-deployment/**' ]
-
-env:
-  AZURE_WEBAPP_NAME: ga-hwaffmb0eqajfza5
-  AZURE_RESOURCE_GROUP: GA_group
-  PYTHON_VERSION: '3.11'
+    inputs:
+      admin_override:
+        description: 'Admin override to enable'
+        required: true
+        default: 'false'
 
 jobs:
-  deploy:
+  disabled_notice:
+    if: github.event.inputs.admin_override == 'enable_admin_mode'
     runs-on: ubuntu-latest
-    environment: production
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        
-    - name: Prepare Flask deployment
-      run: |
-        cd github-deployment
-        echo "Preparing Growth Accelerator Platform Flask deployment..."
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        echo "Flask deployment package ready"
-        
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './github-deployment'
-        
-    - name: Verify deployment
-      run: |
-        echo "Waiting for deployment to complete..."
-        sleep 30
-        curl -f https://${{ env.AZURE_WEBAPP_NAME }}.westeurope-01.azurewebsites.net || echo "Deployment verification failed"
+      - name: Conflict Prevention Notice
+        run: |
+          echo "This workflow is disabled to prevent Azure deployment conflicts"
+          echo "Active workflows: azure-ga-webapp.yml, azure-custom-domain.yml"
+          echo "Contact admin to re-enable if absolutely necessary"
