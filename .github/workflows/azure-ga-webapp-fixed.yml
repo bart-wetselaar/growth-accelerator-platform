@@ -1,24 +1,13 @@
-name: "[DISABLED] azure-ga-webapp-fixed.yml"
-
-# This workflow has been DISABLED to prevent deployment conflicts
-# Only azure-ga-webapp.yml and azure-custom-domain.yml should be active
-
+name: "[AUTO-DISABLED] azure-ga-webapp-fixed.yml"
 on:
-  # DISABLED - conflicts with primary deployment workflows
   workflow_dispatch:
     inputs:
       admin_override:
-        description: 'Admin override to enable'
         required: true
         default: 'false'
-
 jobs:
-  disabled_notice:
-    if: github.event.inputs.admin_override == 'enable_admin_mode'
+  disabled:
+    if: github.event.inputs.admin_override == 'admin_enable'
     runs-on: ubuntu-latest
     steps:
-      - name: Conflict Prevention Notice
-        run: |
-          echo "This workflow is disabled to prevent Azure deployment conflicts"
-          echo "Active workflows: azure-ga-webapp.yml, azure-custom-domain.yml"
-          echo "Contact admin to re-enable if absolutely necessary"
+      - run: echo "Auto-disabled by self-solving system to prevent conflicts"
