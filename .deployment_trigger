@@ -1,5 +1,9 @@
-# Azure Deployment Trigger
-# Generated: 2025-06-26T17:19:32.002678
-# Reason: Auto-fix deployment issue
+# Platform Alignment Deployment Trigger
+# All dependencies synchronized across Replit-GitHub-Azure
+# Python 3.11 standardized on all platforms
+# Triggered at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-This file triggers a fresh deployment to Azure Web App.
+DEPLOYMENT_ID=ea3214c35205d8bf
+PLATFORMS_ALIGNED=true
+DEPENDENCIES_SYNCED=true
+AZURE_WEBAPP=ga-hwaffmb0eqajfza5
