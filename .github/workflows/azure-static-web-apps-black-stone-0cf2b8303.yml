@@ -1,58 +1,24 @@
-name: Azure Static Web Apps CI/CD
+name: "[DISABLED] azure-static-web-apps-black-stone-0cf2b8303.yml"
+
+# This workflow has been DISABLED to prevent deployment conflicts
+# Only azure-ga-webapp.yml and azure-custom-domain.yml should be active
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+  # DISABLED - conflicts with primary deployment workflows
+  workflow_dispatch:
+    inputs:
+      admin_override:
+        description: 'Admin override to enable'
+        required: true
+        default: 'false'
 
 jobs:
-  build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  disabled_notice:
+    if: github.event.inputs.admin_override == 'enable_admin_mode'
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
-    permissions:
-       id-token: write
-       contents: read
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
-      - name: Install OIDC Client from Core Package
-        run: npm install @actions/core@1.6.0 @actions/http-client
-      - name: Get Id Token
-        uses: actions/github-script@v6
-        id: idtoken
-        with:
-           script: |
-               const coredemo = require('@actions/core')
-               return await coredemo.getIDToken()
-           result-encoding: string
-      - name: Build And Deploy
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_STONE_0CF2B8303 }}
-          action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "." # Built app content directory - optional
-          github_id_token: ${{ steps.idtoken.outputs.result }}
-          ###### End of Repository/Build Configurations ######
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          action: "close"
+      - name: Conflict Prevention Notice
+        run: |
+          echo "This workflow is disabled to prevent Azure deployment conflicts"
+          echo "Active workflows: azure-ga-webapp.yml, azure-custom-domain.yml"
+          echo "Contact admin to re-enable if absolutely necessary"
