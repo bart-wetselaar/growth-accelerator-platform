@@ -1,21 +1,24 @@
-name: Azure ZIP Deploy
+name: "[DISABLED] azure-zip-deploy.yml"
+
+# This workflow has been DISABLED to prevent deployment conflicts
+# Only azure-ga-webapp.yml and azure-custom-domain.yml should be active
 
 on:
+  # DISABLED - conflicts with primary deployment workflows
   workflow_dispatch:
+    inputs:
+      admin_override:
+        description: 'Admin override to enable'
+        required: true
+        default: 'false'
 
 jobs:
-  deploy:
+  disabled_notice:
+    if: github.event.inputs.admin_override == 'enable_admin_mode'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Create ZIP package
-      run: |
-        cd github-deployment
-        zip -r ../app.zip .
-        
-    - name: Deploy via ZIP
-      run: |
-        curl -X POST -u '${{ secrets.AZURE_DEPLOYMENT_USERNAME }}:${{ secrets.AZURE_DEPLOYMENT_PASSWORD }}' \
-        -T ../app.zip \
-        https://ga-hwaffmb0eqajfza5.scm.westeurope-01.azurewebsites.net/api/zipdeploy
+      - name: Conflict Prevention Notice
+        run: |
+          echo "This workflow is disabled to prevent Azure deployment conflicts"
+          echo "Active workflows: azure-ga-webapp.yml, azure-custom-domain.yml"
+          echo "Contact admin to re-enable if absolutely necessary"
