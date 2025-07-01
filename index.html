@@ -1,87 +1,140 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Accelerator Staffing Platform - Static</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="css/static-app.css">
+    <title>Growth Accelerator Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            padding: 40px 20px;
+        }
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-num {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .cta {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+            transition: background 0.3s;
+        }
+        .cta:hover {
+            background: #ff5252;
+            color: white;
+        }
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(76, 175, 80, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .features { grid-template-columns: 1fr; }
+            .stats { flex-direction: column; gap: 20px; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#dashboard">
-                <img src="img/GA_logo_Icon_White.png" alt="GA Logo" width="30" height="30" class="d-inline-block align-text-top">
-                Growth Accelerator
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#dashboard" data-page="dashboard">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#jobs" data-page="jobs">
-                            <i class="bi bi-briefcase"></i> Jobs
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#candidates" data-page="candidates">
-                            <i class="bi bi-people"></i> Candidates
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#clients" data-page="clients">
-                            <i class="bi bi-building"></i> Clients
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#matching" data-page="matching">
-                            <i class="bi bi-bullseye"></i> Matching
-                        </a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <button class="btn btn-outline-light me-2" id="syncBtn">
-                        <i class="bi bi-arrow-repeat"></i> Sync
-                    </button>
-                    <span class="navbar-text me-2" id="connectionStatus">
-                        <i class="bi bi-wifi text-success"></i> Connected
-                    </span>
-                </div>
+    <div class="status">✓ Azure Static Web App</div>
+    <div class="container">
+        <div class="logo">🚀</div>
+        <h1>Growth Accelerator Platform</h1>
+        <p class="subtitle">AI-Powered Staffing and Recruitment Management</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-num">928+</div>
+                <div>Active Candidates</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">11+</div>
+                <div>Job Openings</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">95%</div>
+                <div>Match Accuracy</div>
             </div>
         </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container-fluid mt-5 pt-3">
-        <div id="pageContent">
-            <!-- Content will be loaded here -->
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🤖 AI-Powered Matching</h3>
+                <p>Advanced algorithms match candidates with perfect job opportunities</p>
+            </div>
+            <div class="feature">
+                <h3>🔄 Real-time Integration</h3>
+                <p>Direct Workable API integration with live candidate data</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Automated Operations</h3>
+                <p>Self-solving system with 24/7 monitoring and error resolution</p>
+            </div>
         </div>
-    </main>
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay d-none">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+        
+        <h2>Transform Your Recruitment Process</h2>
+        <p>Experience the power of AI-driven staffing solutions</p>
+        <a href="mailto:contact@growthaccelerator.nl" class="cta">Get Started Today</a>
+        
+        <p style="margin-top: 40px; opacity: 0.7; font-size: 0.9em;">
+            &copy; 2025 Growth Accelerator Platform | Powered by Azure Static Web Apps
+        </p>
     </div>
-
-    <!-- Notification Toast Container -->
-    <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer">
-        <!-- Toasts will be added here -->
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/static-config.js"></script>
-    <script src="js/static-api.js"></script>
-    <script src="js/static-router.js"></script>
-    <script src="js/static-app.js"></script>
 </body>
 </html>
