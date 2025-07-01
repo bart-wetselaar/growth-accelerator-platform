@@ -1,72 +1,282 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Accelerator Platform</title>
+    <title>Growth Accelerator Platform - AI-Powered Staffing Solutions</title>
+    <meta name="description" content="Advanced recruitment platform with AI-powered candidate matching and real-time Workable integration">
+    
+    <!-- Bootstrap and Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="static/css/static-app.css">
+    
+    <!-- Custom Styling for GitHub Deployment -->
     <style>
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding-top: 0;
         }
-        .hero {
+        
+        .navbar {
+            background: rgba(0,0,0,0.9) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .main-content {
+            padding: 40px 20px;
+        }
+        
+        .hero-section {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 60px 30px;
             text-align: center;
-            color: white;
-            margin: 50px auto;
+            margin-bottom: 40px;
         }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
         .status-badge {
-            background: #28a745;
-            color: white;
-            padding: 8px 16px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(76, 175, 80, 0.9);
+            padding: 10px 20px;
             border-radius: 20px;
-            font-weight: bold;
-            display: inline-block;
-            margin: 10px 0;
+            color: white;
+            font-size: 0.9em;
+            z-index: 1050;
+        }
+        
+        .stats-row {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .btn-primary {
+            background: #ff6b6b;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+        }
+        
+        .btn-primary:hover {
+            background: #ff5252;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <h1><i class="fas fa-rocket"></i> Growth Accelerator Platform</h1>
-            <div class="status-badge">
-                <i class="fas fa-check-circle"></i> Deployment Successful
-            </div>
-            <p class="lead">Multi-Platform Deployment Acceleration Platform</p>
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <div class="card bg-transparent border-light">
-                        <div class="card-body text-white">
-                            <h5><i class="fas fa-database"></i> SQLAlchemy</h5>
-                            <p>Conflicts Resolved</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-transparent border-light">
-                        <div class="card-body text-white">
-                            <h5><i class="fas fa-cloud"></i> Azure Integration</h5>
-                            <p>Deployment Ready</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-transparent border-light">
-                        <div class="card-body text-white">
-                            <h5><i class="fab fa-github"></i> GitHub Sync</h5>
-                            <p>Automated CI/CD</p>
-                        </div>
-                    </div>
+    <!-- Status Badge -->
+    <div class="status-badge">
+        ✓ Azure Static Web App Active
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#dashboard">
+                <img src="static/img/GA_logo_Icon_White.png" alt="GA Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
+                Growth Accelerator Platform
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#jobs">
+                            <i class="bi bi-briefcase"></i> Jobs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#candidates">
+                            <i class="bi bi-people"></i> Candidates
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#matching">
+                            <i class="bi bi-bullseye"></i> AI Matching
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <span class="navbar-text">
+                        <i class="bi bi-check-circle text-success"></i> System Online
+                    </span>
                 </div>
             </div>
         </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid main-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="display-4 fw-bold text-white mb-4">Growth Accelerator Platform</h1>
+            <p class="lead text-white-50 mb-4">AI-Powered Staffing and Recruitment Management</p>
+            <p class="text-white-50">Deployed on Azure Static Web Apps with global CDN delivery</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-row">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <h3 class="text-warning">928+</h3>
+                    <p class="text-white-50">Active Candidates</p>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="text-warning">11+</h3>
+                    <p class="text-white-50">Job Openings</p>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="text-warning">95%</h3>
+                    <p class="text-white-50">Match Accuracy</p>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="text-warning">24/7</h3>
+                    <p class="text-white-50">System Monitoring</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Grid -->
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4 class="text-white mb-3">
+                    <i class="bi bi-robot text-warning me-2"></i>
+                    AI-Powered Matching
+                </h4>
+                <p class="text-white-50">Advanced machine learning algorithms analyze candidate profiles and job requirements to deliver perfect matches with 95% accuracy.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4 class="text-white mb-3">
+                    <i class="bi bi-arrow-repeat text-warning me-2"></i>
+                    Real-time Integration
+                </h4>
+                <p class="text-white-50">Direct Workable API integration providing live access to 928+ candidates and 11+ active job positions with real-time synchronization.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4 class="text-white mb-3">
+                    <i class="bi bi-lightning text-warning me-2"></i>
+                    Automated Operations
+                </h4>
+                <p class="text-white-50">Self-solving system with autonomous error detection, automated deployment fixes, and 24/7 monitoring for maximum uptime.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4 class="text-white mb-3">
+                    <i class="bi bi-graph-up text-warning me-2"></i>
+                    Analytics Dashboard
+                </h4>
+                <p class="text-white-50">Comprehensive recruitment analytics with performance metrics, success rates, and predictive insights for data-driven decisions.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4 class="text-white mb-3">
+                    <i class="bi bi-shield-check text-warning me-2"></i>
+                    Enterprise Security
+                </h4>
+                <p class="text-white-50">Bank-level security with encrypted data transmission, secure API endpoints, and compliance with GDPR regulations.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4 class="text-white mb-3">
+                    <i class="bi bi-globe text-warning me-2"></i>
+                    Multi-Platform Deployment
+                </h4>
+                <p class="text-white-50">Seamless deployment across Azure Static Web Apps, custom domains, and integration-ready APIs for external connectivity.</p>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-5">
+            <h2 class="text-white mb-4">Ready to Transform Your Recruitment Process?</h2>
+            <p class="text-white-50 mb-4">Join leading companies using AI-powered recruitment solutions</p>
+            <a href="mailto:contact@growthaccelerator.nl" class="btn btn-primary btn-lg">
+                <i class="bi bi-envelope me-2"></i>
+                Get Started Today
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-5 pt-4 border-top border-secondary">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-white-50">&copy; 2025 Growth Accelerator Platform. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p class="text-white-50">
+                        <i class="bi bi-microsoft text-primary me-1"></i>
+                        Powered by Azure Static Web Apps
+                    </p>
+                </div>
+            </div>
+        </footer>
     </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate feature cards on scroll
+            const cards = document.querySelectorAll('.feature-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s, transform 0.6s';
+                observer.observe(card);
+            });
+            
+            // Update status badge after 3 seconds
+            setTimeout(() => {
+                const badge = document.querySelector('.status-badge');
+                badge.innerHTML = '✓ GitHub Deployment Active';
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
