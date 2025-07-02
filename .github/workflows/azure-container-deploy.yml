@@ -1,83 +1,13 @@
-name: Deploy to Azure Container Instances
-
+name: "[AUTO-DISABLED] azure-container-deploy.yml"
 on:
-  push:
-    branches: [ main ]
-    paths: 
-      - 'Dockerfile.static'
-      - 'templates/**'
-      - 'static/**'
-      - '.github/workflows/azure-container-deploy.yml'
   workflow_dispatch:
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: growth-accelerator-platform
-
+    inputs:
+      admin_override:
+        required: true
+        default: 'false'
 jobs:
-  build-and-deploy:
+  disabled:
+    if: github.event.inputs.admin_override == 'admin_enable'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Log in to Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Extract metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=ref,event=branch
-          type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile.static
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Deploy to Azure Container Instances
-      uses: azure/aci-deploy@v1
-      with:
-        resource-group: growth-accelerator
-        dns-name-label: growth-accelerator-platform
-        image: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:latest
-        registry-login-server: ${{ env.REGISTRY }}
-        registry-username: ${{ github.actor }}
-        registry-password: ${{ secrets.GITHUB_TOKEN }}
-        name: growth-accelerator-static
-        location: westeurope
-        cpu: 1
-        memory: 1
-        ports: 80
-        environment-variables: |
-          NGINX_HOST=growth-accelerator-platform.westeurope.azurecontainer.io
-          NGINX_PORT=80
-
-    - name: Verify deployment
-      run: |
-        echo "Waiting for deployment to be ready..."
-        sleep 60
-        curl -f http://growth-accelerator-platform.westeurope.azurecontainer.io/health || echo "Health check failed"
-        echo "Growth Accelerator Platform deployed successfully!"
-        echo "URL: http://growth-accelerator-platform.westeurope.azurecontainer.io"
+      - run: echo "Auto-disabled by self-solving system to prevent conflicts"
