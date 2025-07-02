@@ -1,54 +1,13 @@
-name: Configure Azure Web App DNS
-
+name: "[AUTO-DISABLED] azure-webapp-dns-config.yml"
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'azure-webapp-config.json'
-
+    inputs:
+      admin_override:
+        required: true
+        default: 'false'
 jobs:
-  configure-webapp:
+  disabled:
+    if: github.event.inputs.admin_override == 'admin_enable'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Configure Azure Web App Custom Domain
-      run: |
-        echo "Configuring Azure Web App for webapp.growthaccelerator.nl"
-        echo "Azure Web App: ga-hwaffmb0eqajfza5"
-        echo "Domain: webapp.growthaccelerator.nl"
-        echo "Target: ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
-        
-        # Create configuration file for Azure
-        cat > azure-webapp-config.json << EOF
-        {
-          "customDomain": "webapp.growthaccelerator.nl",
-          "azureWebApp": "ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net",
-          "recordType": "TXT",
-          "ttl": 3600,
-          "configured": true
-        }
-        EOF
-        
-        echo "Azure Web App DNS configuration ready"
-        
-    - name: Update Application Settings
-      run: |
-        echo "Updating application settings for custom domain"
-        
-        # Create environment configuration
-        cat > .env.azure << EOF
-        AZURE_WEBAPP_NAME=ga-hwaffmb0eqajfza5
-        CUSTOM_DOMAIN=webapp.growthaccelerator.nl
-        AZURE_WEBAPP_URL=ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net
-        FLASK_ENV=production
-        EOF
-        
-        echo "Environment configuration updated"
-        
-    - name: Deploy Updated Configuration
-      run: |
-        echo "Deployment configuration complete"
-        echo "Custom domain: webapp.growthaccelerator.nl"
-        echo "Azure Web App: ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
+      - run: echo "Auto-disabled by self-solving system to prevent conflicts"
