@@ -1,0 +1,9 @@
+{
+  "domain": "webapp.growthaccelerator.nl",
+  "record_type": "TXT",
+  "points_to": "ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net",
+  "ttl": 3600,
+  "azure_webapp_name": "ga-hwaffmb0eqajfza5",
+  "resource_group": "growth-accelerator",
+  "location": "westeurope"
+}
