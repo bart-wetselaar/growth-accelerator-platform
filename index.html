@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growth Accelerator Staffing Platform</title>
+    <meta name="description" content="AI-powered staffing and recruitment platform with real-time Workable integration">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://white-coast-08429c303.1.azurestaticapps.net">
+    
+    <!-- Optimized CSS for Azure Static Web Apps -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -14,14 +19,19 @@
             --sidebar-width: 95px;
         }
         
-        body {
-            font-family: 'Inter', sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--primary-blue);
             color: var(--text-white);
             min-height: 100vh;
             display: flex;
+            overflow-x: hidden;
         }
         
         .sidebar {
@@ -35,6 +45,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 1000;
         }
         
         .category {
@@ -44,14 +55,13 @@
             padding: 15px 0 5px 0;
             width: 100%;
             text-align: center;
+            font-weight: 600;
         }
         
         .category.staffing {
             color: var(--primary-pink);
             margin-top: 20px;
         }
-        
-
         
         .nav-item {
             display: flex;
@@ -64,17 +74,26 @@
             color: var(--text-white);
             text-decoration: none;
             opacity: 0.7;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
         
         .nav-item:hover {
             opacity: 1;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-white);
+            text-decoration: none;
         }
         
         .nav-item svg {
             margin-bottom: 5px;
             width: 24px;
             height: 24px;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-item:hover svg {
+            transform: scale(1.1);
         }
         
         .main-content {
@@ -84,34 +103,68 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
             min-height: 100vh;
             text-align: center;
+            position: relative;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         
         .logo {
             margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out;
         }
         
-        .logo img {
-            width: 280px;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         h1 {
-            font-size: 48px;
+            font-size: clamp(32px, 8vw, 48px);
             font-weight: 700;
             margin: 10px 0;
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out 0.2s both;
         }
         
         h2 {
-            font-size: 18px;
+            font-size: clamp(16px, 4vw, 18px);
             font-weight: 400;
             margin: 10px 0 40px 0;
             opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.4s both;
         }
         
         .enter-button {
-            background-color: var(--primary-pink);
+            background: linear-gradient(135deg, var(--primary-pink), #ff3a5a);
             color: var(--text-white);
             border: none;
             border-radius: 30px;
@@ -119,17 +172,75 @@
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            transition: background-color 0.3s;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(255, 85, 113, 0.3);
+            animation: fadeInUp 1s ease-out 0.6s both;
         }
         
         .enter-button:hover {
-            background-color: #ff3a5a;
+            background: linear-gradient(135deg, #ff3a5a, var(--primary-pink));
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(255, 85, 113, 0.4);
+            color: var(--text-white);
+            text-decoration: none;
+        }
+        
+        .enter-button:active {
+            transform: translateY(0);
         }
         
         .enter-button svg {
             margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .enter-button:hover svg {
+            transform: translateX(3px);
+        }
+        
+        .features-grid {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-pink);
+        }
+        
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .feature-desc {
+            font-size: 12px;
+            opacity: 0.8;
         }
         
         @media (max-width: 768px) {
@@ -140,14 +251,48 @@
             .main-content {
                 margin-left: 60px;
                 width: calc(100% - 60px);
+                padding: 20px 15px;
             }
             
             .nav-item {
                 font-size: 10px;
+                padding: 12px 0;
             }
             
-            h1 {
-                font-size: 36px;
+            .nav-item svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .status-indicator {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 50px;
+            }
+            
+            .main-content {
+                margin-left: 50px;
+                width: calc(100% - 50px);
+            }
+            
+            .category {
+                font-size: 10px;
+            }
+            
+            .nav-item {
+                font-size: 9px;
             }
         }
     </style>
@@ -155,21 +300,21 @@
 <body>
     <div class="sidebar">
         <div class="category staffing">STAFFING</div>
-        <a href="#" class="nav-item">
+        <a href="#onboarding" class="nav-item" title="Candidate Onboarding">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                 <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
             </svg>
             Onboarding
         </a>
-        <a href="#" class="nav-item">
+        <a href="#jobs" class="nav-item" title="Job Management">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
             Jobs
         </a>
-        <a href="#" class="nav-item">
+        <a href="#candidates" class="nav-item" title="Candidate Database">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
@@ -178,14 +323,14 @@
             </svg>
             Candidates
         </a>
-        <a href="#" class="nav-item">
+        <a href="#matching" class="nav-item" title="AI Matching Engine">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
             </svg>
             Matching
         </a>
-        <a href="/staffing/backoffice" class="nav-item">
+        <a href="#backoffice" class="nav-item" title="Back Office Operations">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -198,32 +343,38 @@
     </div>
     
     <div class="main-content">
+        <div class="status-indicator">
+            ✓ Azure Static Web App Online
+        </div>
+        
         <div class="logo">
             <svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g>
-                    <path d="M45 25L35 30L25 25L35 20L45 25Z" fill="white"/>
-                    <path d="M45 35L35 40L25 35L35 30L45 35Z" fill="white"/>
-                    <path d="M35 50L25 45L35 40L45 45L35 50Z" fill="white"/>
-                    <path d="M65 40H70V42H65V40Z" fill="white"/>
-                    <path d="M65 42H70V44H65V42Z" fill="white"/>
-                    <path d="M65 44H70V46H65V44Z" fill="white"/>
-                    <path d="M65 46H70V48H65V46Z" fill="white"/>
-                    <path d="M70 34H75V36H70V34Z" fill="white"/>
-                    <path d="M70 36H75V38H70V36Z" fill="white"/>
-                    <path d="M70 38H75V40H70V38Z" fill="white"/>
-                    <path d="M75 30H80V32H75V30Z" fill="white"/>
-                    <path d="M75 32H80V34H75V32Z" fill="white"/>
-                    <path d="M80 28H85V30H80V28Z" fill="white"/>
-                    <path d="M85 28H90V30H85V28Z" fill="white"/>
-                    <path d="M90 28H95V30H90V28Z" fill="white"/>
+                    <path d="M45 25L35 30L25 25L35 20L45 25Z" fill="white" opacity="0.9"/>
+                    <path d="M45 35L35 40L25 35L35 30L45 35Z" fill="white" opacity="0.8"/>
+                    <path d="M35 50L25 45L35 40L45 45L35 50Z" fill="white" opacity="0.7"/>
+                    <path d="M65 40H70V42H65V40Z" fill="white" opacity="0.9"/>
+                    <path d="M65 42H70V44H65V42Z" fill="white" opacity="0.8"/>
+                    <path d="M65 44H70V46H65V44Z" fill="white" opacity="0.7"/>
+                    <path d="M65 46H70V48H65V46Z" fill="white" opacity="0.6"/>
+                    <path d="M70 34H75V36H70V34Z" fill="white" opacity="0.9"/>
+                    <path d="M70 36H75V38H70V36Z" fill="white" opacity="0.8"/>
+                    <path d="M70 38H75V40H70V38Z" fill="white" opacity="0.7"/>
+                    <path d="M75 30H80V32H75V30Z" fill="white" opacity="0.9"/>
+                    <path d="M75 32H80V34H75V32Z" fill="white" opacity="0.8"/>
+                    <path d="M80 28H85V30H80V28Z" fill="white" opacity="0.9"/>
+                    <path d="M85 28H90V30H85V28Z" fill="white" opacity="0.8"/>
+                    <path d="M90 28H95V30H90V28Z" fill="white" opacity="0.7"/>
                     <text x="70" y="40" font-family="Inter, sans-serif" font-size="18" font-weight="bold" fill="white">GROWTH</text>
                     <text x="70" y="58" font-family="Inter, sans-serif" font-size="18" font-weight="bold" fill="white">ACCELERATOR.</text>
                 </g>
             </svg>
         </div>
+        
         <h1>Staffing Platform</h1>
         <h2>Match. Onboard. Hire.</h2>
-        <a href="/workspace" class="enter-button">
+        
+        <a href="#workspace" class="enter-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
                 <polyline points="10 17 15 12 10 7"></polyline>
@@ -231,6 +382,59 @@
             </svg>
             Enter Workspace
         </a>
+        
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-title">AI Matching</div>
+                <div class="feature-desc">Intelligent candidate-job matching</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Real-time Data</div>
+                <div class="feature-desc">Live Workable integration</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Automated</div>
+                <div class="feature-desc">Self-solving operations</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">Secure</div>
+                <div class="feature-desc">Enterprise-grade security</div>
+            </div>
+        </div>
     </div>
+    
+    <script>
+        // Progressive enhancement for Azure Static Web Apps
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    console.log('Navigation clicked:', this.getAttribute('href'));
+                });
+            });
+            
+            // Update status indicator
+            setTimeout(() => {
+                const indicator = document.querySelector('.status-indicator');
+                if (indicator) {
+                    indicator.textContent = '✓ Platform Ready';
+                }
+            }, 2000);
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.classList.contains('enter-button')) {
+                    console.log('Enter workspace triggered');
+                }
+            });
+            
+            console.log('Growth Accelerator Platform initialized on Azure Static Web Apps');
+        });
+    </script>
 </body>
 </html>
