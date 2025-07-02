@@ -1,56 +1,13 @@
-name: Azure Static Web Apps with Docker
-
+name: "[AUTO-DISABLED] azure-static-docker-deploy.yml"
 on:
-  push:
-    branches: [ main ]
-    paths: 
-      - 'Dockerfile.static'
-      - 'templates/**'
-      - 'nginx.conf'
   workflow_dispatch:
-
+    inputs:
+      admin_override:
+        required: true
+        default: 'false'
 jobs:
-  build_and_deploy_job:
+  disabled:
+    if: github.event.inputs.admin_override == 'admin_enable'
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
     steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: true
-        
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v2
-      
-    - name: Build Docker Image
-      run: |
-        docker build -f Dockerfile.static -t growth-accelerator-platform:latest .
-        
-    - name: Extract Static Files from Docker
-      run: |
-        # Create container from image
-        docker create --name temp-container growth-accelerator-platform:latest
-        
-        # Extract static files
-        docker cp temp-container:/usr/share/nginx/html ./static-output
-        
-        # Clean up container
-        docker rm temp-container
-        
-        # List extracted files
-        ls -la static-output/
-        
-    - name: Deploy to Azure Static Web Apps
-      uses: Azure/static-web-apps-deploy@v1
-      with:
-        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        action: "upload"
-        app_location: "./static-output"
-        api_location: ""
-        output_location: ""
-        
-    - name: Verify Deployment
-      run: |
-        echo "Growth Accelerator Platform deployed successfully!"
-        echo "Static Web App URL: https://white-coast-08429c303.1.azurestaticapps.net"
-        echo "Alternative URL: https://thankful-moss-085e6bd03.1.azurestaticapps.net"
+      - run: echo "Auto-disabled by self-solving system to prevent conflicts"
