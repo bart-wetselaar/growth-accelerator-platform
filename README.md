@@ -2,7 +2,7 @@
 
 ## Azure Web App Deployment
 
-**Live URL**: https://webapp.growthaccelerator.nl  
+**Live URL**: https://web  
 **Azure Web App**: ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net  
 **Status**: Production Ready
 
@@ -10,7 +10,7 @@
 
 The platform is configured with the following DNS settings:
 
-- **Domain**: webapp.growthaccelerator.nl
+- **Domain**: web
 - **TXT Record**: ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net
 - **TTL**: 3600 seconds
 - **Location**: West Europe
@@ -27,14 +27,14 @@ The platform is configured with the following DNS settings:
 
 ## Endpoints
 
-- **Main Platform**: https://webapp.growthaccelerator.nl
-- **Health Check**: https://webapp.growthaccelerator.nl/health
-- **Domain Config**: https://webapp.growthaccelerator.nl/domain-config
-- **Azure Status**: https://webapp.growthaccelerator.nl/azure-status
+- **Main Platform**: https://web
+- **Health Check**: https://web/health
+- **Domain Config**: https://web/domain-config
+- **Azure Status**: https://web/azure-status
 
 ## Deployment Architecture
 
-1. **Azure Web App**: webapp.growthaccelerator.nl (Primary dynamic app)
+1. **Azure Web App**: web (Primary dynamic app)
 2. **Azure Static Web Apps**: 
    - https://white-coast-08429c303.1.azurestaticapps.net
    - https://thankful-moss-085e6bd03.1.azurestaticapps.net
