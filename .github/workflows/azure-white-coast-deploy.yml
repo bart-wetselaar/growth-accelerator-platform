@@ -1,64 +1,13 @@
-name: Deploy to White Coast Azure Static Web App
-
+name: "[AUTO-DISABLED] azure-white-coast-deploy.yml"
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'github-deployment/**'
   workflow_dispatch:
-
+    inputs:
+      admin_override:
+        required: true
+        default: 'false'
 jobs:
-  build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  disabled:
+    if: github.event.inputs.admin_override == 'admin_enable'
     runs-on: ubuntu-latest
-    name: Build and Deploy to White Coast
     steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: true
-        
-    - name: Build Growth Accelerator Platform
-      run: |
-        echo "Building Growth Accelerator Platform for white-coast deployment"
-        echo "Source: github-deployment directory"
-        echo "Target: https://white-coast-08429c303.1.azurestaticapps.net"
-        
-        # Verify github-deployment content
-        ls -la github-deployment/
-        
-        if [ -f "github-deployment/index.html" ]; then
-          echo "Frontend ready for deployment"
-        else
-          echo "Error: Frontend not found"
-          exit 1
-        fi
-        
-    - name: Deploy to Azure Static Web Apps (White Coast)
-      id: builddeploy
-      uses: Azure/static-web-apps-deploy@v1
-      with:
-        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        action: "upload"
-        app_location: "./github-deployment"
-        api_location: ""
-        output_location: ""
-        
-    - name: Deployment Success
-      run: |
-        echo "Growth Accelerator Platform deployed successfully to white-coast!"
-        echo "Live URL: https://white-coast-08429c303.1.azurestaticapps.net"
-        echo "Deployment method: GitHub Actions"
-        echo "Source: github-deployment directory"
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-    - name: Close Pull Request
-      id: closepullrequest
-      uses: Azure/static-web-apps-deploy@v1
-      with:
-        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-        action: "close"
+      - run: echo "Auto-disabled by self-solving system to prevent conflicts"
