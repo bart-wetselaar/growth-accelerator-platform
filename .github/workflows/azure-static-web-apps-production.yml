@@ -1,0 +1,79 @@
+name: Azure Static Web Apps Deploy (Successful Configuration)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'templates/**'
+      - 'static/**'
+      - 'index.html'
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+        
+    - name: Build Growth Accelerator Platform
+      run: |
+        echo "Building Growth Accelerator Platform for Azure Static Web Apps"
+        
+        # Create build directory
+        mkdir -p build
+        
+        # Copy main template
+        if [ -f "templates/index.html" ]; then
+          cp templates/index.html build/index.html
+        fi
+        
+        # Copy static assets
+        if [ -d "static" ]; then
+          cp -r static build/
+        fi
+        
+        # Verify build
+        ls -la build/
+        
+    - name: Deploy to Azure Static Web Apps (White Coast)
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "./build"
+        api_location: ""
+        output_location: ""
+        
+    - name: Deploy to Azure Static Web Apps (Thankful Moss)
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "./build"
+        api_location: ""
+        output_location: ""
+        
+    - name: Deployment Complete
+      run: |
+        echo "Growth Accelerator Platform deployed successfully!"
+        echo "Live URLs:"
+        echo "  - https://white-coast-08429c303.1.azurestaticapps.net"
+        echo "  - https://thankful-moss-085e6bd03.1.azurestaticapps.net"
+        echo "  - webapp.growthaccelerator.nl (custom domain)"
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+    - name: Close Pull Request
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        action: "close"
