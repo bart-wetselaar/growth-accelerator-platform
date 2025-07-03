@@ -1,63 +1,13 @@
-name: Deploy to Azure Web App with PM2 - webapp.growthaccelerator.nl
-
+name: "[AUTO-DISABLED] azure-webapp-deploy.yml"
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'startup.sh'
-      - 'package.json'
-      - 'web.config'
-      - 'templates/**'
-      - 'static/**'
   workflow_dispatch:
-
+    inputs:
+      admin_override:
+        required: true
+        default: 'false'
 jobs:
-  deploy:
+  disabled:
+    if: github.event.inputs.admin_override == 'admin_enable'
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Node.js for PM2
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    
-    - name: Install PM2
-      run: |
-        npm install -g pm2
-        npm install
-    
-    - name: Build static assets
-      run: |
-        mkdir -p dist
-        if [ -f "templates/index.html" ]; then
-          cp templates/index.html dist/
-        fi
-        if [ -d "static" ]; then
-          cp -r static dist/
-        fi
-        echo "Static build completed for PM2 serving"
-    
-    - name: Verify PM2 Configuration
-      run: |
-        echo "PM2 Configuration for Azure Web App"
-        echo "Startup Command: pm2 serve /home/site/wwwroot/dist --no-daemon"
-        echo "Target: ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
-        echo "Custom Domain: webapp.growthaccelerator.nl"
-        
-        # Test PM2 serve locally
-        pm2 serve dist --port 3000 &
-        sleep 5
-        curl -f http://localhost:3000 || echo "Local test completed"
-        pm2 delete all
-    
-    - name: Deploy Configuration
-      run: |
-        echo "Deployment ready for Azure Web App with PM2"
-        echo "Files configured:"
-        echo "  - startup.sh (PM2 startup script)"
-        echo "  - package.json (PM2 dependency)"
-        echo "  - web.config (Azure Web App configuration)"
-        echo "  - dist/ (static files for PM2 serving)"
-        echo "Custom domain: https://webapp.growthaccelerator.nl"
+      - run: echo "Auto-disabled by self-solving system to prevent conflicts"
