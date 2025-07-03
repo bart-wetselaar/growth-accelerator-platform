@@ -2,9 +2,9 @@ from app import app
 from datetime import datetime
 import os
 
-# Azure Web App Configuration for webapp.growthaccelerator.nl
+# Azure Web App Configuration for web
 AZURE_WEBAPP_NAME = os.environ.get('AZURE_WEBAPP_NAME', 'ga-hwaffmb0eqajfza5')
-CUSTOM_DOMAIN = os.environ.get('CUSTOM_DOMAIN', 'webapp.growthaccelerator.nl')
+CUSTOM_DOMAIN = os.environ.get('CUSTOM_DOMAIN', 'web')
 AZURE_WEBAPP_URL = f"{AZURE_WEBAPP_NAME}.westeurope-01.azurewebsites.net"
 
 # Configure Flask for Azure Web App
