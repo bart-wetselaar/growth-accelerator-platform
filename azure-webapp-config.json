@@ -1,5 +1,5 @@
 {
-  "domain": "webapp.growthaccelerator.nl",
+  "domain": "web",
   "record_type": "TXT",
   "points_to": "ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net",
   "ttl": 3600,
