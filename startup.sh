@@ -1,14 +1,14 @@
 #!/bin/bash
-# Azure Web App startup script with PM2 for webapp.growthaccelerator.nl
+# Azure Web App startup script with PM2 for web
 # Updated based on user configuration: pm2 serve /home/site/wwwroot/dist --no-daemon
 
 echo "Starting Growth Accelerator Platform with PM2"
 echo "Azure Web App: ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
-echo "Custom Domain: webapp.growthaccelerator.nl"
+echo "Custom Domain: web"
 
 # Set environment variables
 export AZURE_WEBAPP_NAME=ga-hwaffmb0eqajfza5
-export CUSTOM_DOMAIN=webapp.growthaccelerator.nl
+export CUSTOM_DOMAIN=web
 export FLASK_ENV=production
 
 # Install PM2 globally
@@ -44,7 +44,7 @@ if [ ! -f "/home/site/wwwroot/dist/index.html" ]; then
 <body>
     <h1>Growth Accelerator Platform</h1>
     <div class="status">✓ Azure Web App Online with PM2</div>
-    <p>Served by PM2 on webapp.growthaccelerator.nl</p>
+    <p>Served by PM2 on web</p>
 </body>
 </html>
 EOF
