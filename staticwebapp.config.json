@@ -1,10 +1,6 @@
 {
   "routes": [
     {
-      "route": "/api/*",
-      "allowedRoles": ["anonymous"]
-    },
-    {
       "route": "/*",
       "serve": "/index.html",
       "statusCode": 200
@@ -12,17 +8,13 @@
   ],
   "responseOverrides": {
     "404": {
-      "rewrite": "/index.html"
+      "rewrite": "/index.html",
+      "statusCode": 200
     }
   },
   "globalHeaders": {
     "Cache-Control": "no-cache, no-store, must-revalidate",
     "Pragma": "no-cache",
-    "Expires": "0",
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY"
-  },
-  "mimeTypes": {
-    ".json": "application/json"
+    "Expires": "0"
   }
 }
