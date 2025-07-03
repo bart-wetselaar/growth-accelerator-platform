@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Accelerator Platform</title>
-    <meta name="description" content="AI-powered staffing and recruitment platform">
+    <title>Growth Accelerator Platform - Controlled Deployment</title>
+    <meta name="description" content="AI-powered staffing platform - Controlled deployment #1751518768">
     <link rel="canonical" href="https://thankful-moss-085e6bd03.1.azurestaticapps.net">
     
     <style>
@@ -13,6 +13,7 @@
         :root {
             --primary-blue: #00205b;
             --primary-pink: #ff5571;
+            --control-green: #10b981;
             --text-white: #ffffff;
             --sidebar-width: 95px;
         }
@@ -108,26 +109,56 @@
             position: relative;
         }
         
-        .azure-badge {
+        .control-badges {
             position: absolute;
             top: 30px;
             right: 30px;
-            background: linear-gradient(135deg, #0078d4, #106ebe);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .control-badge {
+            background: linear-gradient(135deg, var(--control-green), #059669);
             color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-size: 13px;
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-size: 11px;
             font-weight: 600;
-            box-shadow: 0 6px 20px rgba(0, 120, 212, 0.3);
-            animation: pulse 3s infinite;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            animation: pulse 2s infinite;
+        }
+        
+        .azure-badge {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-size: 11px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .deployment-id {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.9; transform: scale(1.02); }
+            50% { opacity: 0.8; transform: scale(1.02); }
         }
         
         .logo-container {
@@ -207,10 +238,6 @@
             text-decoration: none;
         }
         
-        .cta-button:active {
-            transform: translateY(-1px);
-        }
-        
         .cta-button svg {
             margin-right: 12px;
             transition: transform 0.3s ease;
@@ -249,7 +276,7 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, var(--primary-pink), #ff3a5a);
+            background: linear-gradient(90deg, var(--control-green), var(--primary-pink));
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
@@ -267,7 +294,7 @@
         .feature-icon {
             font-size: 2.5rem;
             margin-bottom: 16px;
-            filter: drop-shadow(0 0 10px rgba(255, 85, 113, 0.3));
+            filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.3));
         }
         
         .feature-title {
@@ -283,7 +310,7 @@
             line-height: 1.5;
         }
         
-        .azure-info {
+        .deployment-info {
             position: absolute;
             bottom: 30px;
             left: 50%;
@@ -291,6 +318,7 @@
             font-size: 12px;
             opacity: 0.6;
             animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.5s both;
+            text-align: center;
         }
         
         @media (max-width: 768px) {
@@ -304,43 +332,18 @@
                 padding: 40px 20px;
             }
             
-            .nav-item {
-                font-size: 10px;
-                padding: 14px 6px;
-            }
-            
-            .nav-item svg {
-                width: 18px;
-                height: 18px;
+            .control-badges {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 30px;
+                align-items: center;
             }
             
             .features-showcase {
                 grid-template-columns: 1fr;
                 gap: 20px;
                 margin-top: 60px;
-            }
-            
-            .azure-badge {
-                position: relative;
-                top: 0;
-                right: 0;
-                margin-bottom: 30px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .sidebar {
-                width: 60px;
-            }
-            
-            .main-content {
-                margin-left: 60px;
-                width: calc(100% - 60px);
-                padding: 30px 15px;
-            }
-            
-            .category {
-                font-size: 9px;
             }
         }
     </style>
@@ -389,11 +392,20 @@
     </div>
     
     <div class="main-content">
-        <div class="azure-badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
-            </svg>
-            Azure Static Web App
+        <div class="control-badges">
+            <div class="control-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+                </svg>
+                Controlled
+            </div>
+            <div class="azure-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+                </svg>
+                Azure Direct
+            </div>
+            <div class="deployment-id">#1751518768</div>
         </div>
         
         <div class="logo-container">
@@ -402,9 +414,9 @@
                     <path d="M50 30L38 36L26 30L38 24L50 30Z" fill="white" opacity="0.95"/>
                     <path d="M50 42L38 48L26 42L38 36L50 42Z" fill="white" opacity="0.85"/>
                     <path d="M38 60L26 54L38 48L50 54L38 60Z" fill="white" opacity="0.75"/>
-                    <path d="M70 48H76V50H70V48Z" fill="#ff5571" opacity="0.9"/>
-                    <path d="M70 50H76V52H70V50Z" fill="#ff5571" opacity="0.8"/>
-                    <path d="M70 52H76V54H70V52Z" fill="#ff5571" opacity="0.7"/>
+                    <path d="M70 48H76V50H70V48Z" fill="#10b981" opacity="0.9"/>
+                    <path d="M70 50H76V52H70V50Z" fill="#10b981" opacity="0.8"/>
+                    <path d="M70 52H76V54H70V52Z" fill="#10b981" opacity="0.7"/>
                     <path d="M76 40H82V42H76V40Z" fill="white" opacity="0.9"/>
                     <path d="M76 42H82V44H76V42Z" fill="white" opacity="0.8"/>
                     <path d="M82 36H88V38H82V36Z" fill="white" opacity="0.9"/>
@@ -415,8 +427,8 @@
             </svg>
         </div>
         
-        <h1>Staffing Platform</h1>
-        <p class="subtitle">AI-Powered Recruitment & Matching</p>
+        <h1>Controlled Deployment</h1>
+        <p class="subtitle">Direct Azure Static Web App Frontend</p>
         
         <a href="#platform" class="cta-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -429,46 +441,52 @@
         
         <div class="features-showcase">
             <div class="feature-card">
-                <div class="feature-icon">🤖</div>
-                <div class="feature-title">AI Matching</div>
-                <div class="feature-desc">Intelligent candidate-job matching with machine learning algorithms</div>
+                <div class="feature-icon">✅</div>
+                <div class="feature-title">Controlled Frontend</div>
+                <div class="feature-desc">This is the controlled version deployed directly to Azure</div>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <div class="feature-title">Real-time Analytics</div>
-                <div class="feature-desc">Live data integration with comprehensive reporting</div>
+                <div class="feature-icon">🚀</div>
+                <div class="feature-title">Direct Deploy</div>
+                <div class="feature-desc">Bypasses GitHub and deploys straight to Azure</div>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
-                <div class="feature-title">Automated Workflows</div>
-                <div class="feature-desc">Self-solving operations and intelligent automation</div>
+                <div class="feature-title">Live Update</div>
+                <div class="feature-desc">Timestamp-based deployment verification</div>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <div class="feature-title">Enterprise Security</div>
-                <div class="feature-desc">Azure-grade security with compliance standards</div>
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Targeted URL</div>
+                <div class="feature-desc">Specifically for thankful-moss Azure Static Web App</div>
             </div>
         </div>
         
-        <div class="azure-info">
-            Powered by Azure Static Web Apps • Global CDN • Auto-scaling
+        <div class="deployment-info">
+            Controlled Deployment • Direct Azure • Timestamp 1751518768
         </div>
     </div>
     
     <script>
-        // Progressive enhancement for Azure Static Web Apps
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Growth Accelerator Platform loaded on Azure Static Web Apps');
+            console.log('Controlled Growth Accelerator Platform loaded');
             console.log('URL: https://thankful-moss-085e6bd03.1.azurestaticapps.net');
+            console.log('Deployment ID: 1751518768');
+            console.log('Method: Direct Azure deployment (controlled)');
             
-            // Smooth navigation handling
+            // Add deployment verification
+            const deploymentBadge = document.querySelector('.deployment-id');
+            if (deploymentBadge) {
+                deploymentBadge.style.animation = 'pulse 2s infinite';
+            }
+            
+            // Navigation handling
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
                     const target = this.getAttribute('href');
-                    console.log('Navigation:', target);
+                    console.log('Controlled navigation:', target);
                     
-                    // Add visual feedback
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
@@ -479,33 +497,23 @@
             // Platform launch button
             document.querySelector('.cta-button').addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Platform launch initiated');
+                console.log('Controlled platform launch initiated');
                 
-                // Add loading state
-                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>Launching...';
+                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>Loading...';
                 
                 setTimeout(() => {
                     this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>Launch Platform';
                 }, 2000);
             });
             
-            // Add keyboard navigation
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && document.activeElement.classList.contains('cta-button')) {
-                    document.activeElement.click();
-                }
-            });
-            
-            // Performance monitoring
-            if ('performance' in window) {
-                window.addEventListener('load', function() {
-                    const loadTime = performance.now();
-                    console.log(`Page loaded in ${Math.round(loadTime)}ms`);
-                });
-            }
+            // Verify this is the controlled version
+            setTimeout(() => {
+                console.log('Controlled deployment verification successful');
+                console.log('If you see this message, the controlled frontend is live');
+            }, 1000);
         });
         
-        // Add CSS animation for loading spinner
+        // Add spinner animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes spin {
