@@ -1,12 +1,20 @@
 {
-  "name": "Growth Accelerator Platform",
-  "description": "AI-powered staffing platform with Azure and Replit integration",
-  "homepage": "https://bart-wetselaar.github.io/growth-accelerator-platform",
-  "topics": [
-    "staffing",
-    "azure",
-    "replit",
-    "ai",
-    "platform"
-  ]
+  "name": "growth-accelerator-platform",
+  "version": "2.0.0",
+  "description": "Growth Accelerator Platform - Azure Web App with PM2",
+  "main": "main.py",
+  "scripts": {
+    "start": "pm2 serve /home/site/wwwroot/dist --no-daemon",
+    "dev": "python main.py",
+    "build": "mkdir -p dist && cp templates/index.html dist/ && cp -r static dist/ 2>/dev/null || true"
+  },
+  "dependencies": {
+    "pm2": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["azure", "web-app", "pm2", "staffing", "recruitment"],
+  "author": "Growth Accelerator",
+  "license": "MIT"
 }
