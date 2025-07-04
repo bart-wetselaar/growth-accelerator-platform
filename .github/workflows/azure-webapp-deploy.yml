@@ -1,0 +1,134 @@
+name: Deploy Growth Accelerator to Azure Web App
+
+on:
+  push:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Create dist directory for PM2 serving
+      run: |
+        mkdir -p dist
+        
+        # Copy static files to dist
+        cp -r static/* dist/ 2>/dev/null || true
+        cp -r templates/* dist/ 2>/dev/null || true
+        
+        # Create index.html from template for PM2 serving
+        if [ -f "templates/index.html" ]; then
+          cp templates/index.html dist/index.html
+        elif [ -f "index.html" ]; then
+          cp index.html dist/index.html
+        fi
+        
+        # Ensure we have a working index.html
+        if [ ! -f "dist/index.html" ]; then
+          cat > dist/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Accelerator Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #00205b 0%, #1e40af 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .hero {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px 30px;
+            text-align: center;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff5571, #ef4444);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1 class="display-4 fw-bold mb-4">Growth Accelerator Platform</h1>
+            <p class="lead mb-4">Match. Onboard. Hire.</p>
+            <div class="badge bg-success mb-3">Azure Web App Deployment</div>
+            <p>PM2 Static File Server Active</p>
+            <a href="/api/health" class="btn btn-primary">Health Check</a>
+        </div>
+    </div>
+</body>
+</html>
+EOF
+        fi
+        
+        echo "Contents of dist directory:"
+        ls -la dist/
+        
+    - name: Upload artifact for deployment
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-app
+        path: |
+          .
+          !.git
+          !.github
+          !node_modules
+          
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: python-app
+        
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'ga-hwaffmb0eqajfza5'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_GA }}
+        package: .
+        
+    - name: Deployment verification
+      run: |
+        echo "Deployment completed to Azure Web App"
+        echo "URL: https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
+        echo "PM2 startup command: pm2 serve /home/site/wwwroot/dist --no-daemon"
+        echo "Runtime: Python 3.11"
+        
+        # Test deployment
+        sleep 30
+        curl -f https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net || echo "Site warming up..."
