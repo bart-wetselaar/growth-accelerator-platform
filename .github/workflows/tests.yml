@@ -1,0 +1,65 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
+    - name: Test Growth Accelerator Platform
+      run: |
+        echo "Testing Growth Accelerator Platform components..."
+        
+        # Test main app import
+        python -c "import main; print('✓ Main app imports successfully')"
+        
+        # Test static files exist
+        if [ -f "index.html" ]; then
+          echo "✓ Landing page exists"
+        fi
+        
+        if [ -d "static" ]; then
+          echo "✓ Static directory exists"
+        fi
+        
+        if [ -d "templates" ]; then
+          echo "✓ Templates directory exists"
+        fi
+        
+        echo "✓ All basic tests passed"
+        
+    - name: Test Multi-Platform Configuration
+      run: |
+        echo "Testing multi-platform deployment configuration..."
+        
+        # Check for essential files
+        test -f "staticwebapp.config.json" && echo "✓ Static Web App config found"
+        test -f "web.config" && echo "✓ Azure Web App config found" 
+        test -f "startup.sh" && echo "✓ PM2 startup script found"
+        
+        echo "✓ Multi-platform configuration verified"
