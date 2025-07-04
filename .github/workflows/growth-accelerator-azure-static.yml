@@ -1,0 +1,84 @@
+name: Growth Accelerator Azure Static Web Apps
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'staticwebapp.config.json'
+      - 'templates/**'
+      - 'static/**'
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Growth Accelerator Platform
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+        
+    - name: Verify Growth Accelerator Content
+      run: |
+        echo "🚀 Deploying Growth Accelerator Platform to multiple Static Web Apps"
+        echo "Target platforms:"
+        echo "  - thankful-moss: https://thankful-moss-085e6bd03.1.azurestaticapps.net"
+        echo "  - white-coast: https://white-coast-08429c303.1.azurestaticapps.net"
+        
+        if [ -f "index.html" ]; then
+          echo "✓ Growth Accelerator landing page found"
+          grep -q "Growth Accelerator" index.html && echo "✓ Growth Accelerator branding verified"
+        else
+          echo "⚠ Landing page not found"
+        fi
+        
+    - name: Deploy to Primary Static Web App (thankful-moss)
+      id: builddeploy_primary
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_MOSS }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "/"
+        api_location: ""
+        output_location: ""
+        
+    - name: Deploy to Secondary Static Web App (white-coast)  
+      id: builddeploy_secondary
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WHITE_COAST }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "/"
+        api_location: ""
+        output_location: ""
+        
+    - name: Multi-Platform Deployment Success
+      run: |
+        echo "🎉 Growth Accelerator Platform deployed to multiple platforms!"
+        echo "Live URLs:"
+        echo "  - Primary Static: https://thankful-moss-085e6bd03.1.azurestaticapps.net"
+        echo "  - Secondary Static: https://white-coast-08429c303.1.azurestaticapps.net"
+        echo "  - Web App: https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
+        echo "  - Custom Domain: webapp.growthaccelerator.nl"
+        echo "Features: Sidebar navigation, Enter Workspace, Match.Onboard.Hire"
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+    - name: Close Pull Request (Primary)
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_MOSS }}
+        action: "close"
+        
+    - name: Close Pull Request (Secondary)
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WHITE_COAST }}
+        action: "close"
