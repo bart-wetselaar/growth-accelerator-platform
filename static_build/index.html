@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Accelerator Staffing Platform</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary-blue: #00205b;
+            --primary-pink: #ff5571;
+            --text-white: #ffffff;
+            --sidebar-width: 95px;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-blue);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .category {
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            padding: 15px 0 5px 0;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .category.staffing {
+            color: var(--primary-pink);
+            margin-top: 20px;
+        }
+        
+
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-white);
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            opacity: 1;
+        }
+        
+        .nav-item svg {
+            margin-bottom: 5px;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        h2 {
+            font-size: 18px;
+            font-weight: 400;
+            margin: 10px 0 40px 0;
+            opacity: 0.9;
+        }
+        
+        .enter-button {
+            background-color: var(--primary-pink);
+            color: var(--text-white);
+            border: none;
+            border-radius: 30px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        
+        .enter-button:hover {
+            background-color: #ff3a5a;
+        }
+        
+        .enter-button svg {
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            
+            .main-content {
+                margin-left: 60px;
+                width: calc(100% - 60px);
+            }
+            
+            .nav-item {
+                font-size: 10px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="category staffing">STAFFING</div>
+        <a onclick="window.location.href='https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/onboarding'" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            Onboarding
+        </a>
+        <a onclick="window.location.href='https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/jobs'" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            Jobs
+        </a>
+        <a onclick="window.location.href='https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/candidates'" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Candidates
+        </a>
+        <a onclick="window.location.href='https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/matching'" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Matching
+        </a>
+        <a onclick="window.location.href='https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/staffing/backoffice'" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Back Office
+        </a>
+    </div>
+    
+    <div class="main-content">
+        <div class="logo">
+            <svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                    <path d="M45 25L35 30L25 25L35 20L45 25Z" fill="white"/>
+                    <path d="M45 35L35 40L25 35L35 30L45 35Z" fill="white"/>
+                    <path d="M35 50L25 45L35 40L45 45L35 50Z" fill="white"/>
+                    <path d="M65 40H70V42H65V40Z" fill="white"/>
+                    <path d="M65 42H70V44H65V42Z" fill="white"/>
+                    <path d="M65 44H70V46H65V44Z" fill="white"/>
+                    <path d="M65 46H70V48H65V46Z" fill="white"/>
+                    <path d="M70 34H75V36H70V34Z" fill="white"/>
+                    <path d="M70 36H75V38H70V36Z" fill="white"/>
+                    <path d="M70 38H75V40H70V38Z" fill="white"/>
+                    <path d="M75 30H80V32H75V30Z" fill="white"/>
+                    <path d="M75 32H80V34H75V32Z" fill="white"/>
+                    <path d="M80 28H85V30H80V28Z" fill="white"/>
+                    <path d="M85 28H90V30H85V28Z" fill="white"/>
+                    <path d="M90 28H95V30H90V28Z" fill="white"/>
+                    <text x="70" y="40" font-family="Inter, sans-serif" font-size="18" font-weight="bold" fill="white">GROWTH</text>
+                    <text x="70" y="58" font-family="Inter, sans-serif" font-size="18" font-weight="bold" fill="white">ACCELERATOR.</text>
+                </g>
+            </svg>
+        </div>
+        <h1>Staffing Platform</h1>
+        <h2>Match. Onboard. Hire.</h2>
+        <a href="https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/workspace" class="enter-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                <polyline points="10 17 15 12 10 7"></polyline>
+                <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            Enter Workspace
+        </a>
+    </div>
+</body>
+</html>
