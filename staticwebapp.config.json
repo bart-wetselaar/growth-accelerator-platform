@@ -1,41 +1,53 @@
 {
   "routes": [
     {
+      "route": "/api/*",
+      "allowedRoles": ["anonymous", "authenticated"]
+    },
+    {
       "route": "/*",
       "serve": "/index.html",
-      "statusCode": 200,
-      "headers": {
-        "Cache-Control": "public, max-age=86400",
-        "X-Content-Type-Options": "nosniff",
-        "X-Frame-Options": "DENY"
-      }
+      "statusCode": 200
     }
   ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/static/*.{css,js,jpg,png,gif,svg,ico}", "/*.{css,js,jpg,png,gif,svg,ico,txt,xml}"]
+  },
+  "mimeTypes": {
+    ".json": "application/json",
+    ".js": "application/javascript",
+    ".css": "text/css",
+    ".html": "text/html",
+    ".svg": "image/svg+xml",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".gif": "image/gif",
+    ".ico": "image/x-icon"
+  },
+  "globalHeaders": {
+    "Cache-Control": "public, max-age=31536000, immutable"
+  },
   "responseOverrides": {
     "404": {
       "rewrite": "/index.html",
       "statusCode": 200
     }
   },
-  "globalHeaders": {
-    "Cache-Control": "public, max-age=31536000",
-    "Expires": "Thu, 31 Dec 2025 23:59:59 GMT"
+  "platform": {
+    "apiRuntime": "node:18"
   },
-  "mimeTypes": {
-    ".json": "application/json",
-    ".js": "text/javascript",
-    ".css": "text/css"
-  },
-  "platformErrorOverrides": [
-    {
-      "errorType": "NotFound",
-      "serve": "/index.html",
-      "statusCode": 200
-    },
-    {
-      "errorType": "Unauthenticated", 
-      "serve": "/index.html",
-      "statusCode": 200
+  "trailingSlash": "auto",
+  "auth": {
+    "rolesSource": "/api/GetRoles",
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "registration": {
+          "openIdIssuer": "https://login.microsoftonline.com/common/v2.0",
+          "clientIdSettingName": "AZURE_CLIENT_ID",
+          "clientSecretSettingName": "AZURE_CLIENT_SECRET"
+        }
+      }
     }
-  ]
+  }
 }
