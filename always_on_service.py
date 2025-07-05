@@ -22,9 +22,10 @@ logger = logging.getLogger(__name__)
 class AlwaysOnService:
     def __init__(self):
         self.production_urls = [
-            "https://staff-match-pro-bart83.replit.app",
-            "https://webapp.growthaccelerator.nl",
-            "https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net"
+            "https://growth-accelerator-platform.replit.app",
+            "https://web"
+            "https://white-coast-08429c303.1.azurestaticapps.net",
+            "https://thankful-moss-085e6bd03.1.azurestaticapps.net"
         ]
         
         # Only use local URL in development environments
