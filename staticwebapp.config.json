@@ -3,7 +3,12 @@
     {
       "route": "/*",
       "serve": "/index.html",
-      "statusCode": 200
+      "statusCode": 200,
+      "headers": {
+        "Cache-Control": "public, max-age=86400",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY"
+      }
     }
   ],
   "responseOverrides": {
@@ -13,8 +18,24 @@
     }
   },
   "globalHeaders": {
-    "Cache-Control": "no-cache, no-store, must-revalidate",
-    "Pragma": "no-cache",
-    "Expires": "0"
-  }
+    "Cache-Control": "public, max-age=31536000",
+    "Expires": "Thu, 31 Dec 2025 23:59:59 GMT"
+  },
+  "mimeTypes": {
+    ".json": "application/json",
+    ".js": "text/javascript",
+    ".css": "text/css"
+  },
+  "platformErrorOverrides": [
+    {
+      "errorType": "NotFound",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "errorType": "Unauthenticated", 
+      "serve": "/index.html",
+      "statusCode": 200
+    }
+  ]
 }
