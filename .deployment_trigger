@@ -1,5 +1,2 @@
-# Azure Deployment Trigger
-# Generated: 2025-06-29T05:28:07.102419
-# Reason: Auto-fix deployment issue
-
-This file triggers a fresh deployment to Azure Web App.
+Deployment triggered at 2025-07-05T07:55:27.156305
+Docker deployment to Azure
