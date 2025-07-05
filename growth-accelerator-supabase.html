@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Accelerator Platform - Supabase Edition</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/umd/supabase.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .candidate-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .candidate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+        
+        .candidate-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .candidate-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .candidate-info h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .candidate-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .candidate-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .skill-tag {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .candidate-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e5e9;
+        }
+        
+        .candidate-stat {
+            text-align: center;
+        }
+        
+        .candidate-stat-number {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .candidate-stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-hired {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .page-button {
+            padding: 12px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .page-button:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+        }
+        
+        .page-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-info {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .real-time-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://doulsumepjfihqowzheq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvdWxzdW1lcGpmaWhxb3d6aGVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4Nzk3ODgsImV4cCI6MjA2NDQ1NTc4OH0.IewqiemFwcu74Y8Gla-XJUMiQp-ym8J-i0niylIVK2A';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const GrowthAcceleratorPlatform = () => {
+            const [candidates, setCandidates] = useState([]);
+            const [jobs, setJobs] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [statusFilter, setStatusFilter] = useState('all');
+            const [experienceFilter, setExperienceFilter] = useState('all');
+            const [currentPage, setCurrentPage] = useState(1);
+            const [realtimeConnected, setRealtimeConnected] = useState(false);
+            
+            const candidatesPerPage = 12;
+
+            // Initialize data and real-time subscriptions
+            useEffect(() => {
+                fetchData();
+                setupRealtimeSubscriptions();
+                
+                return () => {
+                    // Clean up subscriptions
+                    supabase.removeAllChannels();
+                };
+            }, []);
+
+            const fetchData = async () => {
+                try {
+                    setLoading(true);
+                    setError(null);
+
+                    // Fetch candidates with their skills
+                    const { data: candidatesData, error: candidatesError } = await supabase
+                        .from('candidates')
+                        .select(`
+                            *,
+                            candidate_skills (
+                                skill_id,
+                                proficiency_level,
+                                skills (
+                                    name,
+                                    category
+                                )
+                            )
+                        `)
+                        .order('created_at', { ascending: false });
+
+                    if (candidatesError) throw candidatesError;
+
+                    // Transform skills data
+                    const transformedCandidates = candidatesData.map(candidate => ({
+                        ...candidate,
+                        skills: candidate.candidate_skills?.map(cs => cs.skills?.name).filter(Boolean) || []
+                    }));
+
+                    setCandidates(transformedCandidates);
+
+                    // Fetch jobs
+                    const { data: jobsData, error: jobsError } = await supabase
+                        .from('jobs')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (jobsError) throw jobsError;
+                    setJobs(jobsData);
+
+                } catch (err) {
+                    console.error('Error fetching data:', err);
+                    setError(`Failed to load data: ${err.message}`);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const setupRealtimeSubscriptions = () => {
+                // Subscribe to candidates changes
+                const candidatesSubscription = supabase
+                    .channel('candidates-changes')
+                    .on('postgres_changes', 
+                        { 
+                            event: '*', 
+                            schema: 'public', 
+                            table: 'candidates' 
+                        }, 
+                        (payload) => {
+                            console.log('Candidates real-time update:', payload);
+                            fetchData(); // Refresh data when changes occur
+                        }
+                    )
+                    .subscribe((status) => {
+                        if (status === 'SUBSCRIBED') {
+                            setRealtimeConnected(true);
+                        }
+                    });
+
+                // Subscribe to jobs changes
+                const jobsSubscription = supabase
+                    .channel('jobs-changes')
+                    .on('postgres_changes', 
+                        { 
+                            event: '*', 
+                            schema: 'public', 
+                            table: 'jobs' 
+                        }, 
+                        (payload) => {
+                            console.log('Jobs real-time update:', payload);
+                            fetchData(); // Refresh data when changes occur
+                        }
+                    )
+                    .subscribe();
+            };
+
+            // Filter and search logic
+            const filteredCandidates = useMemo(() => {
+                return candidates.filter(candidate => {
+                    const matchesSearch = candidate.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        candidate.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        candidate.skills?.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
+                    
+                    const matchesStatus = statusFilter === 'all' || candidate.status === statusFilter;
+                    
+                    const matchesExperience = experienceFilter === 'all' || 
+                                            (experienceFilter === 'junior' && candidate.experience_years <= 2) ||
+                                            (experienceFilter === 'mid' && candidate.experience_years > 2 && candidate.experience_years <= 5) ||
+                                            (experienceFilter === 'senior' && candidate.experience_years > 5);
+                    
+                    return matchesSearch && matchesStatus && matchesExperience;
+                });
+            }, [candidates, searchTerm, statusFilter, experienceFilter]);
+
+            // Pagination
+            const totalPages = Math.ceil(filteredCandidates.length / candidatesPerPage);
+            const currentCandidates = filteredCandidates.slice(
+                (currentPage - 1) * candidatesPerPage,
+                currentPage * candidatesPerPage
+            );
+
+            const getInitials = (name) => {
+                return name?.split(' ').map(n => n[0]).join('').toUpperCase() || '?';
+            };
+
+            const getStatusClass = (status) => {
+                switch (status) {
+                    case 'active': return 'status-active';
+                    case 'hired': return 'status-hired';
+                    default: return 'status-inactive';
+                }
+            };
+
+            if (loading) {
+                return (
+                    <div className="container">
+                        <div className="loading">
+                            <div>🔄 Loading Growth Accelerator Platform...</div>
+                            <div style={{marginTop: '10px', fontSize: '14px'}}>Connecting to Supabase...</div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="container">
+                    {realtimeConnected && (
+                        <div className="real-time-indicator">
+                            🟢 Real-time Connected
+                        </div>
+                    )}
+
+                    <div className="header">
+                        <div className="logo">GA</div>
+                        <h1 className="title">Growth Accelerator Platform</h1>
+                        <p className="subtitle">Powered by Supabase - Real-time Staffing & Recruitment Management</p>
+                        
+                        <div className="stats">
+                            <div className="stat">
+                                <span className="stat-number">{candidates.length}</span>
+                                <span className="stat-label">Total Candidates</span>
+                            </div>
+                            <div className="stat">
+                                <span className="stat-number">{jobs.length}</span>
+                                <span className="stat-label">Active Jobs</span>
+                            </div>
+                            <div className="stat">
+                                <span className="stat-number">{candidates.filter(c => c.status === 'active').length}</span>
+                                <span className="stat-label">Available</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="content">
+                        {error && (
+                            <div className="error">
+                                ⚠️ {error}
+                                <button onClick={fetchData} style={{marginLeft: '10px', padding: '5px 10px'}}>
+                                    Retry
+                                </button>
+                            </div>
+                        )}
+
+                        <input
+                            type="text"
+                            placeholder="Search candidates by name, email, or skills..."
+                            className="search-bar"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                        <div className="filters">
+                            <select 
+                                className="filter-select"
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                            >
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="hired">Hired</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+
+                            <select 
+                                className="filter-select"
+                                value={experienceFilter}
+                                onChange={(e) => setExperienceFilter(e.target.value)}
+                            >
+                                <option value="all">All Experience</option>
+                                <option value="junior">Junior (0-2 years)</option>
+                                <option value="mid">Mid (3-5 years)</option>
+                                <option value="senior">Senior (5+ years)</option>
+                            </select>
+                        </div>
+
+                        {filteredCandidates.length === 0 ? (
+                            <div className="empty-state">
+                                <h3>No candidates found</h3>
+                                <p>Try adjusting your search or filters</p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="candidates-grid">
+                                    {currentCandidates.map((candidate) => (
+                                        <div key={candidate.id} className="candidate-card">
+                                            <div className="candidate-header">
+                                                <div className="candidate-avatar">
+                                                    {getInitials(candidate.name)}
+                                                </div>
+                                                <div className="candidate-info">
+                                                    <h3>{candidate.name}</h3>
+                                                    <p>{candidate.email}</p>
+                                                </div>
+                                                <div className={`status-badge ${getStatusClass(candidate.status)}`}>
+                                                    {candidate.status}
+                                                </div>
+                                            </div>
+
+                                            <div className="candidate-skills">
+                                                {candidate.skills?.slice(0, 4).map((skill, index) => (
+                                                    <span key={index} className="skill-tag">
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                                {candidate.skills?.length > 4 && (
+                                                    <span className="skill-tag">
+                                                        +{candidate.skills.length - 4} more
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="candidate-stats">
+                                                <div className="candidate-stat">
+                                                    <div className="candidate-stat-number">
+                                                        {candidate.experience_years || 0}
+                                                    </div>
+                                                    <div className="candidate-stat-label">Years Exp.</div>
+                                                </div>
+                                                <div className="candidate-stat">
+                                                    <div className="candidate-stat-number">
+                                                        {candidate.applications_count || 0}
+                                                    </div>
+                                                    <div className="candidate-stat-label">Applications</div>
+                                                </div>
+                                                <div className="candidate-stat">
+                                                    <div className="candidate-stat-number">
+                                                        {candidate.location || 'Remote'}
+                                                    </div>
+                                                    <div className="candidate-stat-label">Location</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {totalPages > 1 && (
+                                    <div className="pagination">
+                                        <button 
+                                            className="page-button"
+                                            onClick={() => setCurrentPage(currentPage - 1)}
+                                            disabled={currentPage === 1}
+                                        >
+                                            Previous
+                                        </button>
+                                        <span className="page-info">
+                                            Page {currentPage} of {totalPages}
+                                        </span>
+                                        <button 
+                                            className="page-button"
+                                            onClick={() => setCurrentPage(currentPage + 1)}
+                                            disabled={currentPage === totalPages}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<GrowthAcceleratorPlatform />, document.getElementById('root'));
+    </script>
+</body>
+</html>
