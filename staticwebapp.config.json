@@ -2,7 +2,9 @@
   "routes": [
     {
       "route": "/api/*",
-      "allowedRoles": ["anonymous", "authenticated"]
+      "allowedRoles": [
+        "anonymous"
+      ]
     },
     {
       "route": "/*",
@@ -12,33 +14,23 @@
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/static/*.{css,js,jpg,png,gif,svg,ico}", "/*.{css,js,jpg,png,gif,svg,ico,txt,xml}"]
+    "exclude": [
+      "/api/*",
+      "/*.{js,css,png,jpg,jpeg,gif,svg,ico}"
+    ]
   },
   "mimeTypes": {
     ".json": "application/json",
     ".js": "application/javascript",
-    ".css": "text/css",
-    ".html": "text/html",
-    ".svg": "image/svg+xml",
-    ".png": "image/png",
-    ".jpg": "image/jpeg",
-    ".gif": "image/gif",
-    ".ico": "image/x-icon"
+    ".css": "text/css"
   },
   "globalHeaders": {
-    "Cache-Control": "public, max-age=31536000, immutable",
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY",
-    "X-XSS-Protection": "1; mode=block"
+    "cache-control": "public, max-age=31536000, immutable"
   },
   "responseOverrides": {
     "404": {
       "rewrite": "/index.html",
       "statusCode": 200
     }
-  },
-  "platform": {
-    "apiRuntime": "node:18"
-  },
-  "trailingSlash": "auto"
+  }
 }
