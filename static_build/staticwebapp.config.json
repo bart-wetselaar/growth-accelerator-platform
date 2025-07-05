@@ -1,0 +1,22 @@
+{
+  "routes": [
+    {
+      "route": "/api/*",
+      "redirect": "https://ga-hwaffmb0eqajfza5.westeurope-01.azurewebsites.net/api/*",
+      "statusCode": 301
+    },
+    {
+      "route": "/static/*",
+      "headers": {
+        "Cache-Control": "public, max-age=604800"
+      }
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html"
+  },
+  "globalHeaders": {
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Content-Type-Options": "nosniff"
+  }
+}
