@@ -4,62 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growth Accelerator Platform</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/umd/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f0f2f5;
             min-height: 100vh;
+        }
+        
+        .navbar {
+            background: #1a1a2e;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .brand-name {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            color: white;
+        }
+        
+        .nav-link {
+            color: #b0b0c0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: white;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
         }
         
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 15px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        
-        .dashboard {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stats-grid {
+        .stats-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
@@ -67,117 +87,225 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .candidate-list {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        .candidate-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
         
-        .candidate-info h3 {
-            color: #333;
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a1a2e;
             margin-bottom: 5px;
         }
         
-        .candidate-info p {
+        .stat-label {
             color: #666;
-            font-size: 0.9em;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #357abd;
+        }
+        
+        .candidate-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .candidate-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .candidate-card:hover {
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        
+        .candidate-info h3 {
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .candidate-details {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .candidate-skills {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .skill-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
         }
         
         .status-badge {
-            padding: 5px 10px;
+            padding: 6px 15px;
             border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
         
         .status-active {
-            background: #e8f5e8;
-            color: #2d7d2d;
+            background: #d4edda;
+            color: #155724;
         }
         
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 60px;
             color: #666;
         }
         
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4a90e2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
         
-        .real-time-indicator {
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .realtime-indicator {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
             background: #4CAF50;
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
-    <div id="root">
-        <div class="loading">Loading Growth Accelerator Platform...</div>
-    </div>
+    <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
         const { createClient } = supabase;
 
-        // Supabase configuration
+        // Initialize Supabase
         const supabaseUrl = 'https://doulsumepjfihqowzheq.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvdWxzdW1lcGpmaWhxb3d6aGVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4Nzk3ODgsImV4cCI6MjA2NDQ1NTc4OH0.IewqiemFwcu74Y8Gla-XJUMiQp-ym8J-i0niylIVK2A';
         const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-        function GrowthAcceleratorPlatform() {
+        function GrowthAcceleratorApp() {
             const [candidates, setCandidates] = useState([]);
             const [jobs, setJobs] = useState([]);
             const [loading, setLoading] = useState(true);
-            const [error, setError] = useState(null);
-            const [realTimeStatus, setRealTimeStatus] = useState('Connected');
+            const [searchTerm, setSearchTerm] = useState('');
+            const [realtimeStatus, setRealtimeStatus] = useState('Connected');
 
-            // Load initial data
             useEffect(() => {
-                loadData();
-                setupRealTimeSubscription();
+                loadInitialData();
+                const subscription = setupRealtimeSubscription();
+                return () => subscription.unsubscribe();
             }, []);
 
-            const loadData = async () => {
+            const loadInitialData = async () => {
                 try {
                     setLoading(true);
                     
@@ -185,149 +313,188 @@
                     const { data: candidatesData, error: candidatesError } = await supabaseClient
                         .from('candidates')
                         .select('*')
-                        .limit(50);
+                        .order('created_at', { ascending: false })
+                        .limit(100);
                     
-                    if (candidatesError) {
-                        console.error('Candidates error:', candidatesError);
-                        setError('Error loading candidates: ' + candidatesError.message);
-                    } else {
-                        setCandidates(candidatesData || []);
+                    if (!candidatesError && candidatesData) {
+                        setCandidates(candidatesData);
                     }
                     
-                    // Load jobs
-                    const { data: jobsData, error: jobsError } = await supabaseClient
+                    // Load jobs (if table exists)
+                    const { data: jobsData } = await supabaseClient
                         .from('jobs')
                         .select('*')
                         .limit(20);
                     
-                    if (jobsError) {
-                        console.error('Jobs error:', jobsError);
-                        // Don't set error for jobs since table might not exist yet
-                    } else {
-                        setJobs(jobsData || []);
+                    if (jobsData) {
+                        setJobs(jobsData);
                     }
                     
-                } catch (err) {
-                    console.error('Load error:', err);
-                    setError('Failed to load data: ' + err.message);
+                } catch (error) {
+                    console.error('Error loading data:', error);
                 } finally {
                     setLoading(false);
                 }
             };
 
-            const setupRealTimeSubscription = () => {
-                const subscription = supabaseClient
-                    .channel('public:candidates')
+            const setupRealtimeSubscription = () => {
+                return supabaseClient
+                    .channel('candidates_channel')
                     .on('postgres_changes', 
                         { event: '*', schema: 'public', table: 'candidates' }, 
                         (payload) => {
-                            console.log('Real-time update:', payload);
-                            setRealTimeStatus('Update received');
-                            setTimeout(() => setRealTimeStatus('Connected'), 2000);
-                            
-                            // Refresh data on changes
-                            loadData();
+                            setRealtimeStatus('Update received');
+                            setTimeout(() => setRealtimeStatus('Connected'), 2000);
+                            loadInitialData();
                         }
                     )
                     .subscribe();
-
-                return () => {
-                    subscription.unsubscribe();
-                };
             };
+
+            const filteredCandidates = candidates.filter(candidate => {
+                const searchLower = searchTerm.toLowerCase();
+                return (
+                    candidate.name?.toLowerCase().includes(searchLower) ||
+                    candidate.email?.toLowerCase().includes(searchLower) ||
+                    candidate.location?.toLowerCase().includes(searchLower) ||
+                    candidate.skills?.some(skill => skill.toLowerCase().includes(searchLower))
+                );
+            });
+
+            const activeCount = candidates.filter(c => c.status === 'active').length;
+            const applicationsCount = candidates.reduce((sum, c) => sum + (c.applications_count || 0), 0);
 
             if (loading) {
                 return (
-                    <div className="container">
-                        <div className="loading">
-                            <h2>Loading Growth Accelerator Platform...</h2>
-                            <p>Connecting to Supabase database...</p>
+                    <div>
+                        <Navbar />
+                        <div className="container">
+                            <div className="loading">
+                                <div className="loading-spinner"></div>
+                                <h2>Loading Growth Accelerator Platform...</h2>
+                                <p>Connecting to Supabase database...</p>
+                            </div>
                         </div>
                     </div>
                 );
             }
 
             return (
-                <div className="container">
-                    <div className="real-time-indicator">
-                        🔴 {realTimeStatus}
-                    </div>
+                <div>
+                    <Navbar />
                     
-                    <div className="header">
-                        <div className="logo">GA</div>
-                        <h1>Growth Accelerator Platform</h1>
-                        <p>Supabase-Powered Recruitment Management System</p>
+                    <div className="container">
+                        <div className="stats-section">
+                            <div className="stat-card">
+                                <div className="stat-value">{candidates.length}</div>
+                                <div className="stat-label">Total Candidates</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-value">{activeCount}</div>
+                                <div className="stat-label">Active Candidates</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-value">{jobs.length}</div>
+                                <div className="stat-label">Open Positions</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-value">{applicationsCount}</div>
+                                <div className="stat-label">Total Applications</div>
+                            </div>
+                        </div>
+
+                        <div className="main-content">
+                            <div className="section-header">
+                                <h2 className="section-title">Candidate Management</h2>
+                            </div>
+                            
+                            <div className="search-bar">
+                                <input
+                                    type="text"
+                                    className="search-input"
+                                    placeholder="Search candidates by name, email, location, or skills..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                <button className="btn" onClick={loadInitialData}>
+                                    Refresh
+                                </button>
+                            </div>
+
+                            <div className="candidate-grid">
+                                {filteredCandidates.length === 0 ? (
+                                    <div className="empty-state">
+                                        <h3>No candidates found</h3>
+                                        <p>Try adjusting your search or run the Workable sync to import candidates.</p>
+                                    </div>
+                                ) : (
+                                    filteredCandidates.slice(0, 20).map((candidate) => (
+                                        <CandidateCard key={candidate.id} candidate={candidate} />
+                                    ))
+                                )}
+                            </div>
+                        </div>
                     </div>
 
-                    {error && (
-                        <div className="error">
-                            {error}
-                        </div>
-                    )}
-
-                    <div className="dashboard">
-                        <div className="stats-grid">
-                            <div className="stat-card">
-                                <div className="stat-number">{candidates.length}</div>
-                                <div>Active Candidates</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="stat-number">{jobs.length}</div>
-                                <div>Open Positions</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="stat-number">
-                                    {candidates.filter(c => c.applications_count > 0).length}
-                                </div>
-                                <div>Applied Candidates</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="stat-number">✅</div>
-                                <div>Real-time Enabled</div>
-                            </div>
-                        </div>
-
-                        <div className="candidate-list">
-                            <h2>Recent Candidates</h2>
-                            {candidates.length === 0 ? (
-                                <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-                                    <h3>No candidates found</h3>
-                                    <p>Run the Workable sync script to populate the database</p>
-                                    <code style={{background: '#f5f5f5', padding: '10px', borderRadius: '5px', display: 'inline-block', marginTop: '10px'}}>
-                                        python3 sync-workable-final.py
-                                    </code>
-                                </div>
-                            ) : (
-                                candidates.slice(0, 10).map((candidate, index) => (
-                                    <div key={candidate.id || index} className="candidate-item">
-                                        <div className="candidate-info">
-                                            <h3>{candidate.name || 'Unknown Name'}</h3>
-                                            <p>
-                                                {candidate.email || 'No email'} | 
-                                                {candidate.location ? ` ${candidate.location}` : ' Location not specified'} |
-                                                {candidate.experience_years ? ` ${candidate.experience_years} years exp` : ' Experience not specified'}
-                                            </p>
-                                            {candidate.skills && candidate.skills.length > 0 && (
-                                                <p style={{fontSize: '0.8em', color: '#888'}}>
-                                                    Skills: {candidate.skills.slice(0, 3).join(', ')}
-                                                    {candidate.skills.length > 3 && '...'}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div className={`status-badge status-${candidate.status || 'active'}`}>
-                                            {candidate.status || 'Active'}
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
+                    <div className="realtime-indicator">
+                        <span className="pulse"></span>
+                        Real-time: {realtimeStatus}
                     </div>
                 </div>
             );
         }
 
-        // Render the application
-        ReactDOM.render(<GrowthAcceleratorPlatform />, document.getElementById('root'));
+        function Navbar() {
+            return (
+                <nav className="navbar">
+                    <div className="navbar-content">
+                        <div className="logo-section">
+                            <div className="logo">GA</div>
+                            <div className="brand-name">Growth Accelerator</div>
+                        </div>
+                        <div className="nav-links">
+                            <a href="#" className="nav-link">Dashboard</a>
+                            <a href="#" className="nav-link">Candidates</a>
+                            <a href="#" className="nav-link">Jobs</a>
+                            <a href="#" className="nav-link">Analytics</a>
+                        </div>
+                    </div>
+                </nav>
+            );
+        }
+
+        function CandidateCard({ candidate }) {
+            return (
+                <div className="candidate-card">
+                    <div className="candidate-info">
+                        <h3>{candidate.name || 'Unknown Name'}</h3>
+                        <div className="candidate-details">
+                            <div>{candidate.email || 'No email'}</div>
+                            <div>
+                                {candidate.location || 'Location not specified'} 
+                                {candidate.experience_years && ` • ${candidate.experience_years} years exp`}
+                            </div>
+                        </div>
+                        {candidate.skills && candidate.skills.length > 0 && (
+                            <div className="candidate-skills">
+                                {candidate.skills.slice(0, 3).map((skill, index) => (
+                                    <span key={index} className="skill-tag">{skill}</span>
+                                ))}
+                                {candidate.skills.length > 3 && (
+                                    <span className="skill-tag">+{candidate.skills.length - 3}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    <div className={`status-badge status-${candidate.status || 'active'}`}>
+                        {candidate.status || 'Active'}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<GrowthAcceleratorApp />, document.getElementById('root'));
     </script>
 </body>
 </html>
