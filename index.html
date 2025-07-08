@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="deployment-time" content="2025-07-08 18:09:48 UTC">
     <title>Growth Accelerator Platform</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -57,20 +58,10 @@
             font-weight: 600;
         }
         
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            color: white;
-        }
-        
-        .nav-link {
-            color: #b0b0c0;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .nav-link:hover {
-            color: white;
+        .deployment-info {
+            color: #888;
+            font-size: 0.8rem;
+            text-align: right;
         }
         
         .container {
@@ -196,6 +187,7 @@
             display: flex;
             gap: 8px;
             margin-top: 8px;
+            flex-wrap: wrap;
         }
         
         .skill-tag {
@@ -282,6 +274,7 @@
 </head>
 <body>
     <div id="root"></div>
+    <!-- Deployment: 2025-07-08 18:09:48 UTC -->
 
     <script type="text/babel">
         const { useState, useEffect } = React;
@@ -450,13 +443,10 @@
                     <div className="navbar-content">
                         <div className="logo-section">
                             <div className="logo">GA</div>
-                            <div className="brand-name">Growth Accelerator</div>
+                            <div className="brand-name">Growth Accelerator Platform</div>
                         </div>
-                        <div className="nav-links">
-                            <a href="#" className="nav-link">Dashboard</a>
-                            <a href="#" className="nav-link">Candidates</a>
-                            <a href="#" className="nav-link">Jobs</a>
-                            <a href="#" className="nav-link">Analytics</a>
+                        <div className="deployment-info">
+                            Deployed: 2025-07-08 18:09:48 UTC
                         </div>
                     </div>
                 </nav>
